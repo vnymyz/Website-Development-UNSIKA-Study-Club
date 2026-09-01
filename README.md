@@ -84,6 +84,21 @@ Studi kasus dipakai konsisten dari pertemuan 1 sampai 6: **katalog UMKM Karawang
 
 > Belajar coding bukan tentang cepat menemukan jawaban, tetapi memahami alasan kode bekerja.
 
+### Bahan Presentasi (PPT)
+
+Tiap pertemuan punya file PowerPoint sendiri, isinya slide ringkas dari bagian Teori — dipakai mentor untuk mengajar di kelas. Lokasinya:
+
+```text
+materi-pertemuan/pert1-code/pertemuan-1-web.pptx
+materi-pertemuan/pert2-code/pertemuan-2-web.pptx
+materi-pertemuan/pert3-code/pertemuan-3-web.pptx
+materi-pertemuan/pert4-code/pertemuan-4-web.pptx
+materi-pertemuan/pert5-code/pertemuan-5-web.pptx
+materi-pertemuan/pert6-code/pertemuan-6-web.pptx
+```
+
+Polanya: `materi-pertemuan/pertN-code/pertemuan-N-web.pptx`, di dalam folder pertemuan yang sama dengan `README.md` dan kodenya. Isi slide selalu ringkasan dari `README.md` pertemuan itu — kalau butuh detail lebih lengkap (penjelasan baris kode, langkah hands-on), buka `README.md`-nya, bukan PPT-nya.
+
 ### Membaca Markdown dengan nyaman di VS Code
 
 Jika membuka materi melalui VS Code, klik kanan file Markdown (misalnya `pert1-code/README.md` atau `kuis-latihan-1.md`), lalu pilih **Open Preview**. VS Code akan menampilkan judul, tabel, kode, dan daftar isi dengan format yang lebih rapi.
