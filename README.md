@@ -11,6 +11,7 @@ Kelas berlangsung selama **6 pertemuan**, setiap **19.30–21.00 WIB**. Semua pr
 3. [Cara Menggunakan Materi](#cara-menggunakan-materi)
 4. [Struktur Folder](#struktur-folder)
 5. [Tools yang Digunakan](#tools-yang-digunakan)
+   - [Ekstensi VS Code yang Direkomendasikan](#ekstensi-vs-code-yang-direkomendasikan)
 6. [Aturan Penggunaan AI](#aturan-penggunaan-ai)
 7. [Latihan, Kuis, dan Penilaian](#latihan-kuis-dan-penilaian)
 8. [Proyek Akhir](#proyek-akhir)
@@ -128,6 +129,21 @@ Website-UNSIKA/
 | Hosting/deploy | Vercel |
 
 Lihat [panduan-setup.md](panduan-setup.md) sebelum memulai. Peserta wajib menyiapkan VS Code, Git, dan akun GitHub/Supabase/Vercel sebelum pertemuan dimulai.
+
+### Ekstensi VS Code yang Direkomendasikan
+
+`Live Server` di atas wajib — tanpa itu, sebagian besar hands-on tidak bisa dijalankan. Ekstensi berikut ini tidak wajib, tapi sering banget dipakai programmer sehari-hari dan bikin proses ngoding jauh lebih nyaman:
+
+| Ekstensi | Fungsi | Kapan berguna |
+|---|---|---|
+| **Prettier - Code formatter** | Merapikan format kode otomatis (indentasi, spasi, tanda kutip) begitu file disimpan | Sejak pertemuan 1 — aktifkan **Format on Save** di Settings supaya kode selalu rapi tanpa dirapikan manual |
+| **Auto Rename Tag** | Kalau ubah nama tag pembuka HTML, tag penutupnya ikut berubah otomatis | Pertemuan 1, saat menulis HTML |
+| **HTML CSS Support** | Autocomplete nama class/id di HTML berdasarkan yang sudah ditulis di CSS | Pertemuan 2, saat styling |
+| **Tailwind CSS IntelliSense** (resmi dari Tailwind Labs) | Autocomplete dan preview warna untuk utility class Tailwind, plus peringatan kalau typo nama class | Pertemuan 2 dan seterusnya — sangat membantu karena nama class Tailwind banyak dan gampang typo |
+| **Path Intellisense** | Autocomplete path file saat menulis `src=`, `href=`, atau `import` | Sepanjang kelas |
+| **Error Lens** | Menampilkan pesan error/warning langsung di sebelah baris kode yang bermasalah, tidak perlu buka panel Problems | Pertemuan 3 dan seterusnya, saat mulai banyak nulis JavaScript |
+| **GitLens** | Menampilkan siapa dan kapan sebuah baris terakhir diubah, riwayat commit per file | Pertemuan 2 dan seterusnya, saat sudah pakai Git |
+| **Code Runner** | Menjalankan potongan kode langsung dari editor lewat tombol ▶, hasilnya muncul di panel Output | Berguna buat coba-coba logika JavaScript cepat (`console.log`) tanpa harus buka browser dulu — di luar itu, hasil utama kelas ini tetap dites lewat Live Server, bukan Code Runner |
 
 ## Aturan Penggunaan AI
 
