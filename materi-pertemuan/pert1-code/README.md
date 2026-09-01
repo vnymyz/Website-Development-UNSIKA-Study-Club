@@ -160,7 +160,7 @@ HTML enggak cuma bisa nampilin teks — halaman web sekarang penuh gambar, video
 <iframe
   width="400"
   height="225"
-  src="https://www.youtube.com/embed/M7lc1UVf-VE"
+  src="https://www.youtube.com/embed/IxX_QHay02M"
   title="Video profil UMKM"
   allowfullscreen
 ></iframe>
@@ -348,23 +348,25 @@ Di dalam section `tentang`, tambahkan setelah paragraf yang sudah ada:
   <h2>Tentang</h2>
   <p>Katalog ini dibuat untuk membantu warga menemukan UMKM lokal di Karawang.</p>
 
-  <img src="https://placehold.co/400x300" alt="Suasana pasar UMKM Karawang">
+  <img src="https://images.unsplash.com/photo-1642473194881-c7425b3789f1?fm=jpg&q=60&w=800&auto=format&fit=crop" alt="Suasana pasar UMKM Karawang">
 
   <iframe
     width="400"
     height="225"
-    src="https://www.youtube.com/embed/M7lc1UVf-VE"
+    src="https://www.youtube.com/embed/IxX_QHay02M"
     title="Video profil UMKM"
     allowfullscreen
   ></iframe>
 
-  <audio src="audio-testimoni-pelanggan.mp3" controls></audio>
+  <audio src="fahhh.mp3" controls></audio>
 </section>
 ```
 
-**Cek hasil:** muncul gambar placeholder abu-abu, lalu di bawahnya muncul video YouTube yang benar-benar bisa diputar (karena embed YouTube memang mengambil videonya langsung dari server YouTube), dan terakhir player audio dengan tombol play/pause — meski file audionya belum benar-benar ada di folder proyek.
+Simpan file audio (`fahhh.mp3`) di folder proyek yang sama dengan `index.html`, supaya `src` di atas benar-benar menemukan filenya.
 
-**Kalau error:** kalau video YouTube tidak muncul, cek lagi URL-nya harus format `youtube.com/embed/ID-VIDEO`, bukan format biasa `youtube.com/watch?v=ID-VIDEO` — dua URL itu beda kegunaan. Kalau tombol play audio tidak jalan, itu wajar — `audio-testimoni-pelanggan.mp3` memang sengaja belum dibuat, fokus langkah ini adalah struktur tag yang benar. Nanti saat proyek beneran, ganti ID video YouTube di atas dengan video profil UMKM yang sesungguhnya, dan taruh file `.mp3` asli di folder proyek untuk audio.
+**Cek hasil:** muncul foto pasar tradisional (diambil dari Unsplash, foto asli — bukan gambar rusak), video YouTube yang bisa diputar, dan player audio yang juga bisa diputar (karena filenya beneran ada di folder proyek).
+
+**Kalau error:** kalau video YouTube tidak muncul, cek lagi URL-nya harus format `youtube.com/embed/ID-VIDEO`, bukan format biasa `youtube.com/watch?v=ID-VIDEO` — dua URL itu beda kegunaan. Kalau tombol play audio tidak jalan, cek nama file di `src` harus **persis sama** dengan nama file audio di folder proyek (termasuk huruf besar/kecil dan ekstensi `.mp3`).
 
 ### Langkah 8 — Menambahkan List Kategori dan Cara Pakai
 
@@ -445,3 +447,4 @@ Website terdiri dari HTML (struktur), CSS (tampilan), dan JavaScript (interaksi)
 ## Isi folder
 
 - `index.html` — hasil akhir hands-on di atas.
+- `fahhh.mp3` — file audio untuk demo tag `<audio>` di Langkah 7.
