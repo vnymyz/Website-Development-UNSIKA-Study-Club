@@ -15,13 +15,25 @@ Daftar kerjaan yang belum selesai per hari ini. Dicek dan diupdate tiap ada prog
 
 ## PowerPoint per Pertemuan
 
-- [x] Pertemuan 1 — `pert1-code/pertemuan-1-web.pptx` selesai (10 slide: judul, rundown, 7 sub-bab teori, penutup), tema matcha (hijau sage, krem, aksen gold).
+- [x] Pertemuan 1 — `pert1-code/pertemuan-1-web.pptx` selesai (12 slide: cover, gambaran sesi, rundown, 8 sub-bab teori, penutup), tema matcha (hijau sage, krem, aksen gold).
 - [ ] Pertemuan 2 — belum dibuat. Tinggal jalankan generator (sudah bertema matcha) ke `pert2-code/README.md`.
 - [ ] Pertemuan 3 — belum dibuat.
 - [ ] Pertemuan 4 — belum dibuat.
 - [ ] Pertemuan 5 — belum dibuat.
 - [ ] Pertemuan 6 — belum dibuat.
 - [ ] Opsional: pasang plugin/tool design buat upgrade visual lebih lanjut (font custom, ikon daun matcha, dsb) — tema warna dasar sudah selesai lewat script, ini cuma polish tambahan kalau user mau.
+
+## Kuis Pilihan Ganda (Google Form)
+
+Untuk Unsika Study Club — bank soal MCQ, terpisah dari `kuis-latihan-N.md` (esai/coding). Ada di folder `latihan-soal-pilgan-pertemuan/`.
+
+- [x] Pertemuan 1 — `pilgan-1.md` + `pilgan-1.csv` selesai (10 soal). Menunggu konfirmasi format sebelum lanjut.
+- [ ] Pertemuan 2 — belum dibuat.
+- [ ] Pertemuan 3 — belum dibuat.
+- [ ] Pertemuan 4 — belum dibuat.
+- [ ] Pertemuan 5 — belum dibuat.
+- [ ] Pertemuan 6 — belum dibuat.
+- [x] `cara-buat-google-form.md` — panduan lengkap + kode Google Apps Script untuk generate Form otomatis dari CSV, ditulis untuk pembaca non-teknis di pihak Unsika Study Club.
 
 ## Keputusan yang Masih Menunggu
 
@@ -34,4 +46,4 @@ Daftar kerjaan yang belum selesai per hari ini. Dicek dan diupdate tiap ada prog
 ## Lain-lain
 
 - [x] `.gitignore` di root `Website-UNSIKA` sudah diatur untuk file kerja internal yang tidak perlu ikut ter-commit.
-- [ ] Belum pernah `git init` di folder `Website-UNSIKA` — cek apakah perlu diinisialisasi sebelum pertemuan 2 (peserta akan belajar push ke GitHub, tapi ini repo materi milik tutor, terpisah dari repo peserta).
+- [x] Repo `Website-UNSIKA` sudah `git init`, commit, dan push ke GitHub.

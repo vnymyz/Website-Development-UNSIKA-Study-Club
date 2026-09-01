@@ -75,7 +75,7 @@ Studi kasus dipakai konsisten dari pertemuan 1 sampai 6: **katalog UMKM Karawang
 
 ## Cara Menggunakan Materi
 
-1. Baca modul sesuai urutan pada folder `materi-pertemuan`.
+1. Baca modul sesuai urutan pada folder `materi-pertemuan`. Tiap folder `pertX-code` berisi `README.md` (materi lengkap), kode hasil hands-on, dan `pertemuan-X-web.pptx` — slide presentasi ringkas dari bagian Teori, untuk dipakai saat mengajar di kelas.
 2. Pelajari bagian **Teori** untuk memahami konsep, lalu ikuti **Hands-on: Langkah demi Langkah** persis seperti instruksinya.
 3. Kerjakan file latihan untuk sesi tersebut di folder `latihan-soal-pertemuan`.
 4. Kerjakan kuis dan latihan secara mandiri sebelum melihat kunci.
@@ -94,9 +94,10 @@ Kamu juga dapat memakai shortcut `Ctrl + Shift + V` untuk membuka preview dari f
 
 ```text
 Website-UNSIKA/
-├── materi-pertemuan/             # Enam folder pertX-code: README (teori + hands-on) + kode per pertemuan
+├── materi-pertemuan/             # Enam folder pertX-code: README (teori + hands-on) + kode + pertemuan-X-web.pptx
 ├── latihan-soal-pertemuan/       # Latihan praktik dan kuis sesi 1–6
 ├── kunci-jawaban-pertemuan/      # Kunci latihan dan kuis
+├── latihan-soal-pilgan-pertemuan/ # Bank soal pilihan ganda untuk Google Form (khusus penyelenggara)
 ├── panduan-setup.md              # Setup VS Code, Git, GitHub, Supabase, Vercel
 ├── panduan-proyek-akhir.md       # Ketentuan proyek akhir kelompok
 └── README.md                     # Panduan ini
