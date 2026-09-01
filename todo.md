@@ -23,9 +23,9 @@ Daftar kerjaan yang belum selesai per hari ini. Dicek dan diupdate tiap ada prog
 - [ ] Pertemuan 6 — belum dibuat.
 - [ ] Opsional: pasang plugin/tool design buat upgrade visual lebih lanjut (font custom, ikon daun matcha, dsb) — tema warna dasar sudah selesai lewat script, ini cuma polish tambahan kalau user mau.
 
-## Kuis Pilihan Ganda (Google Form)
+## Kuis Pilihan Ganda (Slido)
 
-Untuk Unsika Study Club — bank soal MCQ, terpisah dari `kuis-latihan-N.md` (esai/coding). Ada di folder `latihan-soal-pilgan-pertemuan/`.
+Untuk Unsika Study Club — bank soal MCQ, terpisah dari `kuis-latihan-N.md` (esai/coding). Ada di folder `latihan-soal-pilgan-pertemuan/`. Platform: **Slido**, ditampilkan live oleh moderator saat kelas berlangsung (bukan link take-home).
 
 - [x] Pertemuan 1 — `pilgan-1.md` + `pilgan-1.csv` selesai (10 soal). Menunggu konfirmasi format sebelum lanjut.
 - [ ] Pertemuan 2 — belum dibuat.
@@ -33,7 +33,7 @@ Untuk Unsika Study Club — bank soal MCQ, terpisah dari `kuis-latihan-N.md` (es
 - [ ] Pertemuan 4 — belum dibuat.
 - [ ] Pertemuan 5 — belum dibuat.
 - [ ] Pertemuan 6 — belum dibuat.
-- [x] `cara-buat-google-form.md` — panduan lengkap + kode Google Apps Script untuk generate Form otomatis dari CSV, ditulis untuk pembaca non-teknis di pihak Unsika Study Club.
+- [x] `cara-import-slido.md` — panduan moderator: setup event, isi poll (import massal atau manual), jalankan live saat kelas. Menggantikan `cara-buat-google-form.md` (dihapus) setelah diketahui peserta pakai Slido, bukan Google Form.
 
 ## Keputusan yang Masih Menunggu
 

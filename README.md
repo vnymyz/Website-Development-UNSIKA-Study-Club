@@ -110,7 +110,7 @@ Website-UNSIKA/
 ├── materi-pertemuan/             # Enam folder pertX-code: README (teori + hands-on) + kode + pertemuan-X-web.pptx
 ├── latihan-soal-pertemuan/       # Latihan praktik dan kuis sesi 1–6
 ├── kunci-jawaban-pertemuan/      # Kunci latihan dan kuis
-├── latihan-soal-pilgan-pertemuan/ # Bank soal pilihan ganda untuk Google Form (khusus penyelenggara)
+├── latihan-soal-pilgan-pertemuan/ # Bank soal pilihan ganda untuk Slido, ditampilkan live saat kelas (khusus moderator)
 ├── panduan-setup.md              # Setup VS Code, Git, GitHub, Supabase, Vercel
 ├── panduan-proyek-akhir.md       # Ketentuan proyek akhir kelompok
 └── README.md                     # Panduan ini

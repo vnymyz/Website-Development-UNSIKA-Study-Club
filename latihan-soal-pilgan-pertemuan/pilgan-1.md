@@ -1,6 +1,6 @@
 # Kuis Pilihan Ganda — Pertemuan 1: Fondasi Web & HTML
 
-> Dokumen ini untuk kebutuhan internal (generate Google Form via Apps Script, lihat `cara-buat-google-form.md`). Jawaban benar ditandai ✅ — jangan dibagikan mentah ke peserta sebelum mereka mengerjakan kuis.
+> Dokumen ini untuk kebutuhan internal (disiapkan moderator ke Slido untuk ditampilkan live saat kelas, lihat `cara-import-slido.md`). Jawaban benar ditandai ✅ — jangan dibagikan mentah ke peserta sebelum kuis berlangsung.
 
 ## Soal 1
 Dalam analogi warung makan, browser (client) berperan sebagai...
