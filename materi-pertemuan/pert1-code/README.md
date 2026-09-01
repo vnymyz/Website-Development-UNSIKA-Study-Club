@@ -149,25 +149,33 @@ Penjelasan tiap baris:
 HTML enggak cuma bisa nampilin teks — halaman web sekarang penuh gambar, video, dan suara. Untungnya, caranya enggak jauh beda dari yang sudah kita pelajari.
 
 - **Gambar** — pakai `<img src="alamat-file" alt="deskripsi">`, sama seperti yang sudah dipelajari di atas. **GIF sebenarnya cuma gambar biasa** yang isinya banyak frame berurutan sehingga kelihatan bergerak — cara nampilinnya di HTML **sama persis** dengan gambar `.jpg`/`.png`, tinggal ganti nama filenya jadi `.gif`.
-- **Video** — pakai tag `<video>`, dengan atribut `controls` supaya muncul tombol play/pause/volume (kalau `controls` dilupakan, video akan otomatis diam tanpa cara mengontrolnya sama sekali).
+- **Video** — ada dua cara, tergantung sumber videonya:
+  - **Video file sendiri** (`.mp4` dsb, disimpan di folder proyek) — pakai tag `<video>` dengan atribut `controls`.
+  - **Video dari YouTube** — **bukan** pakai `<video>`, karena YouTube tidak memberikan link file video langsung (untuk alasan hak cipta dan bandwidth). Caranya pakai `<iframe>` yang menampilkan video itu seperti "jendela" ke halaman YouTube.
 - **Audio** — pakai tag `<audio>`, juga butuh atribut `controls` supaya pengguna bisa play/pause.
 
 ```html
 <img src="foto-umkm.jpg" alt="Suasana pasar UMKM Karawang">
 
-<video src="video-profil-umkm.mp4" controls width="400">
-  Browser kamu tidak mendukung tag video.
-</video>
+<iframe
+  width="400"
+  height="225"
+  src="https://www.youtube.com/embed/M7lc1UVf-VE"
+  title="Video profil UMKM"
+  allowfullscreen
+></iframe>
 
 <audio src="audio-testimoni-pelanggan.mp3" controls></audio>
 ```
 
-- `controls` — atribut wajib di `<video>` dan `<audio>` supaya pengguna punya tombol buat mengatur pemutarannya sendiri.
-- `width="400"` — mengatur lebar tampilan video dalam piksel (opsional, kalau tidak ditulis video memakai ukuran aslinya).
-- Teks di antara `<video>...</video>` (`"Browser kamu tidak mendukung tag video."`) hanya muncul kalau browser terlalu lama/tidak mendukung tag `<video>` — jarang terjadi di browser modern, tapi tetap praktik yang baik untuk ditulis.
-- `src` bisa berupa **file lokal** (disimpan di folder proyek, misal `assets/video.mp4`) atau **link ke internet** — keduanya valid, tinggal disesuaikan lokasinya.
+- `<iframe>` — tag untuk menampilkan halaman/konten dari situs lain di dalam halaman kita, semacam "jendela" ke website lain.
+- URL embed YouTube **bukan** URL biasa saat nonton (`youtube.com/watch?v=...`) — bagian `watch?v=` diganti jadi `embed/`. Cara paling gampang: buka video YouTube-nya, klik **Share > Embed**, lalu salin `src` dari kode `<iframe>` yang muncul di situ.
+- `allowfullscreen` — atribut supaya tombol layar penuh di video YouTube berfungsi.
+- `width` dan `height` — mengatur ukuran tampilan iframe dalam piksel.
+- `controls` — atribut wajib di `<audio>` (dan `<video>` kalau pakai file sendiri) supaya pengguna punya tombol buat mengatur pemutarannya sendiri.
+- Gambar (`src="alamat-file"`) juga bisa berupa **file lokal** atau **link ke internet** — keduanya valid.
 
-> Slide visual: tiga ikon berdampingan — gambar, kamera video, dan speaker — masing-masing dengan potongan tag `<img>`, `<video>`, `<audio>` di bawahnya.
+> Slide visual: tiga ikon berdampingan — gambar, kamera video, dan speaker — masing-masing dengan potongan tag `<img>`, `<iframe>` (YouTube), `<audio>` di bawahnya.
 
 ### Form: mengumpulkan input dari pengguna
 
@@ -331,7 +339,7 @@ Lalu tambahkan setelah `</main>`, sebelum `</body>`:
 
 **Cek hasil:** halaman lengkap punya empat bagian: Header (judul + menu), Daftar UMKM (3 kartu), Tentang, Kontak (form), dan Footer.
 
-### Langkah 7 — Menambahkan Gambar, Video, dan Audio
+### Langkah 7 — Menambahkan Gambar, Video YouTube, dan Audio
 
 Di dalam section `tentang`, tambahkan setelah paragraf yang sudah ada:
 
@@ -342,17 +350,21 @@ Di dalam section `tentang`, tambahkan setelah paragraf yang sudah ada:
 
   <img src="https://placehold.co/400x300" alt="Suasana pasar UMKM Karawang">
 
-  <video src="video-profil-umkm.mp4" controls width="400">
-    Browser kamu tidak mendukung tag video.
-  </video>
+  <iframe
+    width="400"
+    height="225"
+    src="https://www.youtube.com/embed/M7lc1UVf-VE"
+    title="Video profil UMKM"
+    allowfullscreen
+  ></iframe>
 
   <audio src="audio-testimoni-pelanggan.mp3" controls></audio>
 </section>
 ```
 
-**Cek hasil:** muncul gambar placeholder abu-abu (ini gambar asli dari internet, jadi pasti muncul), lalu di bawahnya muncul player video dan player audio lengkap dengan tombol play/pause — meski filenya belum benar-benar ada di folder proyek.
+**Cek hasil:** muncul gambar placeholder abu-abu, lalu di bawahnya muncul video YouTube yang benar-benar bisa diputar (karena embed YouTube memang mengambil videonya langsung dari server YouTube), dan terakhir player audio dengan tombol play/pause — meski file audionya belum benar-benar ada di folder proyek.
 
-**Kalau error:** kalau diklik tombol play video/audio-nya tidak jalan, itu wajar — filenya memang belum ada (`video-profil-umkm.mp4` dan `audio-testimoni-pelanggan.mp3` sengaja belum dibuat, fokus langkah ini adalah struktur tag yang benar). Kalau mau video/audio-nya beneran jalan, taruh file `.mp4`/`.mp3` asli di folder proyek dan sesuaikan `src` dengan nama filenya.
+**Kalau error:** kalau video YouTube tidak muncul, cek lagi URL-nya harus format `youtube.com/embed/ID-VIDEO`, bukan format biasa `youtube.com/watch?v=ID-VIDEO` — dua URL itu beda kegunaan. Kalau tombol play audio tidak jalan, itu wajar — `audio-testimoni-pelanggan.mp3` memang sengaja belum dibuat, fokus langkah ini adalah struktur tag yang benar. Nanti saat proyek beneran, ganti ID video YouTube di atas dengan video profil UMKM yang sesungguhnya, dan taruh file `.mp3` asli di folder proyek untuk audio.
 
 ### Langkah 8 — Mencoba klik menu navigasi
 
@@ -404,6 +416,7 @@ Website terdiri dari HTML (struktur), CSS (tampilan), dan JavaScript (interaksi)
 | Live Server | Ekstensi VS Code untuk menjalankan halaman HTML secara lokal dengan auto-refresh |
 | GIF | Gambar yang berisi banyak frame berurutan sehingga terlihat bergerak; ditampilkan di HTML sama seperti gambar biasa |
 | `controls` | Atribut pada `<video>`/`<audio>` yang menampilkan tombol play/pause/volume untuk pengguna |
+| `<iframe>` | Tag untuk menampilkan halaman/konten dari situs lain di dalam halaman kita, dipakai untuk embed video YouTube |
 
 ## Isi folder
 
