@@ -144,6 +144,31 @@ Penjelasan tiap baris:
 <a href="#kontak">Hubungi Kami</a>
 ```
 
+### Menampilkan Gambar, GIF, Video, dan Audio
+
+HTML enggak cuma bisa nampilin teks — halaman web sekarang penuh gambar, video, dan suara. Untungnya, caranya enggak jauh beda dari yang sudah kita pelajari.
+
+- **Gambar** — pakai `<img src="alamat-file" alt="deskripsi">`, sama seperti yang sudah dipelajari di atas. **GIF sebenarnya cuma gambar biasa** yang isinya banyak frame berurutan sehingga kelihatan bergerak — cara nampilinnya di HTML **sama persis** dengan gambar `.jpg`/`.png`, tinggal ganti nama filenya jadi `.gif`.
+- **Video** — pakai tag `<video>`, dengan atribut `controls` supaya muncul tombol play/pause/volume (kalau `controls` dilupakan, video akan otomatis diam tanpa cara mengontrolnya sama sekali).
+- **Audio** — pakai tag `<audio>`, juga butuh atribut `controls` supaya pengguna bisa play/pause.
+
+```html
+<img src="foto-umkm.jpg" alt="Suasana pasar UMKM Karawang">
+
+<video src="video-profil-umkm.mp4" controls width="400">
+  Browser kamu tidak mendukung tag video.
+</video>
+
+<audio src="audio-testimoni-pelanggan.mp3" controls></audio>
+```
+
+- `controls` — atribut wajib di `<video>` dan `<audio>` supaya pengguna punya tombol buat mengatur pemutarannya sendiri.
+- `width="400"` — mengatur lebar tampilan video dalam piksel (opsional, kalau tidak ditulis video memakai ukuran aslinya).
+- Teks di antara `<video>...</video>` (`"Browser kamu tidak mendukung tag video."`) hanya muncul kalau browser terlalu lama/tidak mendukung tag `<video>` — jarang terjadi di browser modern, tapi tetap praktik yang baik untuk ditulis.
+- `src` bisa berupa **file lokal** (disimpan di folder proyek, misal `assets/video.mp4`) atau **link ke internet** — keduanya valid, tinggal disesuaikan lokasinya.
+
+> Slide visual: tiga ikon berdampingan — gambar, kamera video, dan speaker — masing-masing dengan potongan tag `<img>`, `<video>`, `<audio>` di bawahnya.
+
 ### Form: mengumpulkan input dari pengguna
 
 Form dipakai saat pengguna perlu **mengetik atau memilih sesuatu**, misalnya form kontak atau form login (dipakai lagi di pertemuan 5).
@@ -306,14 +331,37 @@ Lalu tambahkan setelah `</main>`, sebelum `</body>`:
 
 **Cek hasil:** halaman lengkap punya empat bagian: Header (judul + menu), Daftar UMKM (3 kartu), Tentang, Kontak (form), dan Footer.
 
-### Langkah 7 — Mencoba klik menu navigasi
+### Langkah 7 — Menambahkan Gambar, Video, dan Audio
+
+Di dalam section `tentang`, tambahkan setelah paragraf yang sudah ada:
+
+```html
+<section id="tentang">
+  <h2>Tentang</h2>
+  <p>Katalog ini dibuat untuk membantu warga menemukan UMKM lokal di Karawang.</p>
+
+  <img src="https://placehold.co/400x300" alt="Suasana pasar UMKM Karawang">
+
+  <video src="video-profil-umkm.mp4" controls width="400">
+    Browser kamu tidak mendukung tag video.
+  </video>
+
+  <audio src="audio-testimoni-pelanggan.mp3" controls></audio>
+</section>
+```
+
+**Cek hasil:** muncul gambar placeholder abu-abu (ini gambar asli dari internet, jadi pasti muncul), lalu di bawahnya muncul player video dan player audio lengkap dengan tombol play/pause — meski filenya belum benar-benar ada di folder proyek.
+
+**Kalau error:** kalau diklik tombol play video/audio-nya tidak jalan, itu wajar — filenya memang belum ada (`video-profil-umkm.mp4` dan `audio-testimoni-pelanggan.mp3` sengaja belum dibuat, fokus langkah ini adalah struktur tag yang benar). Kalau mau video/audio-nya beneran jalan, taruh file `.mp4`/`.mp3` asli di folder proyek dan sesuaikan `src` dengan nama filenya.
+
+### Langkah 8 — Mencoba klik menu navigasi
 
 1. Klik link "Daftar UMKM" di menu atas.
 2. Klik link "Kontak".
 
 **Cek hasil:** halaman langsung meloncat (scroll) ke section yang sesuai, karena `href="#id-section"` menunjuk ke `id` yang sama pada tag `<section>`.
 
-### Langkah 8 — Inspect Element
+### Langkah 9 — Inspect Element
 
 1. Klik kanan di halaman browser, pilih **Inspect** (atau tekan `F12`).
 2. Coba klik salah satu elemen di tab **Elements**, perhatikan bagian HTML yang ikut ter-highlight di halaman.
@@ -354,6 +402,8 @@ Website terdiri dari HTML (struktur), CSS (tampilan), dan JavaScript (interaksi)
 | HTTP | Aturan/protokol komunikasi antara client dan server |
 | Tag semantik | Tag HTML yang namanya menjelaskan fungsi bagian tersebut |
 | Live Server | Ekstensi VS Code untuk menjalankan halaman HTML secara lokal dengan auto-refresh |
+| GIF | Gambar yang berisi banyak frame berurutan sehingga terlihat bergerak; ditampilkan di HTML sama seperti gambar biasa |
+| `controls` | Atribut pada `<video>`/`<audio>` yang menampilkan tombol play/pause/volume untuk pengguna |
 
 ## Isi folder
 
