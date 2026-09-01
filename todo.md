@@ -33,5 +33,5 @@ Daftar kerjaan yang belum selesai per hari ini. Dicek dan diupdate tiap ada prog
 
 ## Lain-lain
 
-- [x] `.gitignore` di root `Website-UNSIKA` (isi: `prompt.md`, supaya file context handoff internal tidak ikut ter-commit).
+- [x] `.gitignore` di root `Website-UNSIKA` sudah diatur untuk file kerja internal yang tidak perlu ikut ter-commit.
 - [ ] Belum pernah `git init` di folder `Website-UNSIKA` — cek apakah perlu diinisialisasi sebelum pertemuan 2 (peserta akan belajar push ke GitHub, tapi ini repo materi milik tutor, terpisah dari repo peserta).

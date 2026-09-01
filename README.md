@@ -99,7 +99,6 @@ Website-UNSIKA/
 ├── kunci-jawaban-pertemuan/      # Kunci latihan dan kuis
 ├── panduan-setup.md              # Setup VS Code, Git, GitHub, Supabase, Vercel
 ├── panduan-proyek-akhir.md       # Ketentuan proyek akhir kelompok
-├── prompt.md                     # Brief awal dan context handoff pengembangan materi
 └── README.md                     # Panduan ini
 ```
 
