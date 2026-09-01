@@ -366,14 +366,38 @@ Di dalam section `tentang`, tambahkan setelah paragraf yang sudah ada:
 
 **Kalau error:** kalau video YouTube tidak muncul, cek lagi URL-nya harus format `youtube.com/embed/ID-VIDEO`, bukan format biasa `youtube.com/watch?v=ID-VIDEO` — dua URL itu beda kegunaan. Kalau tombol play audio tidak jalan, itu wajar — `audio-testimoni-pelanggan.mp3` memang sengaja belum dibuat, fokus langkah ini adalah struktur tag yang benar. Nanti saat proyek beneran, ganti ID video YouTube di atas dengan video profil UMKM yang sesungguhnya, dan taruh file `.mp3` asli di folder proyek untuk audio.
 
-### Langkah 8 — Mencoba klik menu navigasi
+### Langkah 8 — Menambahkan List Kategori dan Cara Pakai
+
+Masih di dalam section `tentang`, tambahkan setelah tag `<audio>`:
+
+```html
+<h3>Kategori yang Tersedia</h3>
+<ul>
+  <li>Kuliner</li>
+  <li>Fashion</li>
+  <li>Kerajinan</li>
+</ul>
+
+<h3>Cara Menggunakan Katalog Ini</h3>
+<ol>
+  <li>Pilih kategori yang kamu cari</li>
+  <li>Klik salah satu UMKM untuk melihat detail</li>
+  <li>Hubungi lewat form Kontak di bawah</li>
+</ol>
+```
+
+**Cek hasil:** muncul dua judul kecil dengan dua list di bawahnya — "Kategori yang Tersedia" berupa list bertitik (`<ul>`), "Cara Menggunakan Katalog Ini" berupa list bernomor otomatis 1, 2, 3 (`<ol>`), meski di kodenya sama-sama cuma ditulis `<li>` tanpa nomor manual.
+
+**Kalau error:** kalau `<li>` tidak tampil sebagai list (titik/nomor hilang), cek lagi setiap `<li>` harus berada **di dalam** `<ul>` atau `<ol>`, bukan di luar — browser tidak akan menampilkan `<li>` sebagai list kalau induknya salah atau lupa ditulis.
+
+### Langkah 9 — Mencoba klik menu navigasi
 
 1. Klik link "Daftar UMKM" di menu atas.
 2. Klik link "Kontak".
 
 **Cek hasil:** halaman langsung meloncat (scroll) ke section yang sesuai, karena `href="#id-section"` menunjuk ke `id` yang sama pada tag `<section>`.
 
-### Langkah 9 — Inspect Element
+### Langkah 10 — Inspect Element
 
 1. Klik kanan di halaman browser, pilih **Inspect** (atau tekan `F12`).
 2. Coba klik salah satu elemen di tab **Elements**, perhatikan bagian HTML yang ikut ter-highlight di halaman.
