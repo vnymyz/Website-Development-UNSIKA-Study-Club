@@ -86,16 +86,14 @@ Studi kasus dipakai konsisten dari pertemuan 1 sampai 6: **katalog UMKM Karawang
 
 ### Bahan Presentasi (PPT)
 
-Tiap pertemuan punya file PowerPoint sendiri, isinya slide ringkas dari bagian Teori — dipakai mentor untuk mengajar di kelas. Lokasinya:
+Tiap pertemuan punya file PowerPoint sendiri, isinya slide ringkas dari bagian Teori — dipakai mentor untuk mengajar di kelas. Klik link di bawah untuk langsung buka filenya:
 
-```text
-materi-pertemuan/pert1-code/pertemuan-1-web.pptx
-materi-pertemuan/pert2-code/pertemuan-2-web.pptx
-materi-pertemuan/pert3-code/pertemuan-3-web.pptx
-materi-pertemuan/pert4-code/pertemuan-4-web.pptx
-materi-pertemuan/pert5-code/pertemuan-5-web.pptx
-materi-pertemuan/pert6-code/pertemuan-6-web.pptx
-```
+- [Pertemuan 1 — pertemuan-1-web.pptx](materi-pertemuan/pert1-code/pertemuan-1-web.pptx)
+- Pertemuan 2 — `materi-pertemuan/pert2-code/pertemuan-2-web.pptx` (belum tersedia)
+- Pertemuan 3 — `materi-pertemuan/pert3-code/pertemuan-3-web.pptx` (belum tersedia)
+- Pertemuan 4 — `materi-pertemuan/pert4-code/pertemuan-4-web.pptx` (belum tersedia)
+- Pertemuan 5 — `materi-pertemuan/pert5-code/pertemuan-5-web.pptx` (belum tersedia)
+- Pertemuan 6 — `materi-pertemuan/pert6-code/pertemuan-6-web.pptx` (belum tersedia)
 
 Polanya: `materi-pertemuan/pertN-code/pertemuan-N-web.pptx`, di dalam folder pertemuan yang sama dengan `README.md` dan kodenya. Isi slide selalu ringkasan dari `README.md` pertemuan itu — kalau butuh detail lebih lengkap (penjelasan baris kode, langkah hands-on), buka `README.md`-nya, bukan PPT-nya.
 
