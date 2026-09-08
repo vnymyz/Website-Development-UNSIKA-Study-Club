@@ -21,7 +21,7 @@ Kelas berlangsung selama **6 pertemuan**, setiap **19.30–21.00 WIB**. Semua pr
 Setelah menyelesaikan program ini, peserta diharapkan mampu:
 
 - Memahami cara kerja website: client, server, dan HTTP request/response.
-- Menulis HTML semantik dan menata tampilan dengan CSS, Flexbox, serta Tailwind.
+- Menulis HTML semantik dan menata tampilan dengan CSS, Flexbox, serta CSS Grid.
 - Membuat halaman responsif yang enak dilihat di HP maupun laptop.
 - Menggunakan JavaScript untuk membuat halaman interaktif dan memanipulasi DOM.
 - Memahami konsep database dan menghubungkan aplikasi ke Supabase (Postgres).
@@ -34,7 +34,7 @@ Setelah menyelesaikan program ini, peserta diharapkan mampu:
 | Pertemuan | Fokus | Hasil yang Diharapkan |
 |---|---|---|
 | 1 | Cara kerja web, setup VS Code, HTML semantik | Halaman HTML multi-section yang tampil di browser |
-| 2 | CSS, box model, Flexbox, responsive, Tailwind, Git & GitHub | Halaman responsif, sudah ter-commit dan push ke repository |
+| 2 | CSS, box model, Flexbox, Grid, responsive, Git & GitHub | Halaman responsif, sudah ter-commit dan push ke repository |
 | 3 | JavaScript dasar dan DOM | Halaman interaktif: filter, form, dan render data dari array |
 | 4 | Konsep database dan Supabase (Create + Read) | Data dari form tersimpan di database dan tampil kembali setelah refresh |
 | 5 | Update, Delete, relasi tabel, dan autentikasi | Aplikasi CRUD penuh dengan sistem login |
@@ -51,8 +51,8 @@ Studi kasus dipakai konsisten dari pertemuan 1 sampai 6: **katalog UMKM Karawang
 
 ### Pertemuan 2 — CSS, Responsive Design & Git/GitHub
 
-- **Belajar apa:** cara CSS menempel ke HTML, selector (tag/class/id), box model, Flexbox, media query untuk responsive, Tailwind CSS lewat CDN, Git (commit, repository, remote) dan alur `add → commit → push`, membuat repo di GitHub.
-- **Outcome:** halaman pertemuan 1 jadi rapi dan responsif (enak dilihat di HP maupun laptop), sebagian sudah pakai Tailwind, dan seluruh kode sudah tersimpan di repository GitHub dengan riwayat commit.
+- **Belajar apa:** cara CSS menempel ke HTML, selector (tag/class/id), box model, Flexbox, media query untuk responsive, Git (commit, repository, remote) dan alur `add → commit → push`, membuat repo di GitHub.
+- **Outcome:** halaman pertemuan 1 jadi rapi dan responsif (enak dilihat di HP maupun laptop) pakai CSS murni, dan (kalau sempat) seluruh kode tersimpan di repository GitHub dengan riwayat commit.
 
 ### Pertemuan 3 — JavaScript Dasar & DOM
 
@@ -122,7 +122,7 @@ Website-UNSIKA/
 | Kebutuhan | Tools |
 |---|---|
 | Editor kode | VS Code + ekstensi Live Server |
-| Markup dan styling | HTML5, CSS3, Tailwind CSS (CDN) |
+| Markup dan styling | HTML5, CSS3 (Flexbox, Grid) |
 | Bahasa pemrograman | JavaScript (vanilla, ES6+) |
 | Database dan backend | Supabase (Postgres, Auth, JS Client) |
 | Versi kode dan kolaborasi | Git dan GitHub |
@@ -139,7 +139,6 @@ Lihat [panduan-setup.md](panduan-setup.md) sebelum memulai. Peserta wajib menyia
 | **Prettier - Code formatter** | Merapikan format kode otomatis (indentasi, spasi, tanda kutip) begitu file disimpan | Sejak pertemuan 1 — aktifkan **Format on Save** di Settings supaya kode selalu rapi tanpa dirapikan manual |
 | **Auto Rename Tag** | Kalau ubah nama tag pembuka HTML, tag penutupnya ikut berubah otomatis | Pertemuan 1, saat menulis HTML |
 | **HTML CSS Support** | Autocomplete nama class/id di HTML berdasarkan yang sudah ditulis di CSS | Pertemuan 2, saat styling |
-| **Tailwind CSS IntelliSense** (resmi dari Tailwind Labs) | Autocomplete dan preview warna untuk utility class Tailwind, plus peringatan kalau typo nama class | Pertemuan 2 dan seterusnya — sangat membantu karena nama class Tailwind banyak dan gampang typo |
 | **Path Intellisense** | Autocomplete path file saat menulis `src=`, `href=`, atau `import` | Sepanjang kelas |
 | **Error Lens** | Menampilkan pesan error/warning langsung di sebelah baris kode yang bermasalah, tidak perlu buka panel Problems | Pertemuan 3 dan seterusnya, saat mulai banyak nulis JavaScript |
 | **GitLens** | Menampilkan siapa dan kapan sebuah baris terakhir diubah, riwayat commit per file | Pertemuan 2 dan seterusnya, saat sudah pakai Git |

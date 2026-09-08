@@ -144,6 +144,27 @@ Penjelasan tiap baris:
 <a href="#kontak">Hubungi Kami</a>
 ```
 
+### Div dan Span: Kotak Generik
+
+Tag semantik (`<header>`, `<section>`, dst) itu seperti kotak yang sudah ada labelnya — "Ruang Tamu", "Dapur". `<div>` dan `<span>` itu kardus polos tanpa label: tetap berguna buat membungkus sesuatu, tapi tidak menjelaskan apa isinya.
+
+- **`<div>`** — kotak pembungkus **block** (ambil satu baris penuh). Dipakai untuk mengelompokkan beberapa elemen supaya bisa di-styling atau ditata bareng lewat CSS, kalau tidak ada tag semantik yang cocok.
+- **`<span>`** — kotak pembungkus **inline** (cuma sebesar isinya, nempel di tengah kalimat). Dipakai untuk menandai sebagian kecil teks, misalnya satu kata yang mau diberi warna beda.
+- Aturan praktis: **pakai tag semantik dulu kalau ada yang cocok** (`<nav>`, `<article>`, dst — seperti yang sudah dipakai sepanjang pertemuan ini). `<div>`/`<span>` adalah jalan terakhir kalau tidak ada makna semantik yang pas — bukan pengganti tag semantik.
+
+```html
+<div>
+  <p>Nama: Warung Bu Sari</p>
+  <p>Kategori: Kuliner</p>
+</div>
+
+<p>Status: <span>Buka</span> sampai jam 9 malam.</p>
+```
+
+Di contoh di atas, `<div>` mengelompokkan dua `<p>` jadi satu kesatuan, sementara `<span>` cuma menyorot kata "Buka" di tengah kalimat.
+
+> Slide visual: kotak besar polos berlabel "DIV" membungkus beberapa kotak kecil, di sebelahnya kalimat dengan satu kata di-highlight berlabel "SPAN".
+
 ### Menampilkan Gambar, GIF, Video, dan Audio
 
 HTML enggak cuma bisa nampilin teks — halaman web sekarang penuh gambar, video, dan suara. Untungnya, caranya enggak jauh beda dari yang sudah kita pelajari.
@@ -358,11 +379,11 @@ Di dalam section `tentang`, tambahkan setelah paragraf yang sudah ada:
     allowfullscreen
   ></iframe>
 
-  <audio src="fahhh.mp3" controls></audio>
+  <audio src="getout.mp3" controls></audio>
 </section>
 ```
 
-Simpan file audio (`fahhh.mp3`) di folder proyek yang sama dengan `index.html`, supaya `src` di atas benar-benar menemukan filenya.
+Simpan file audio (`getout.mp3`) di folder proyek yang sama dengan `index.html`, supaya `src` di atas benar-benar menemukan filenya.
 
 **Cek hasil:** muncul foto pasar tradisional (diambil dari Unsplash, foto asli — bukan gambar rusak), video YouTube yang bisa diputar, dan player audio yang juga bisa diputar (karena filenya beneran ada di folder proyek).
 
@@ -443,8 +464,10 @@ Website terdiri dari HTML (struktur), CSS (tampilan), dan JavaScript (interaksi)
 | GIF | Gambar yang berisi banyak frame berurutan sehingga terlihat bergerak; ditampilkan di HTML sama seperti gambar biasa |
 | `controls` | Atribut pada `<video>`/`<audio>` yang menampilkan tombol play/pause/volume untuk pengguna |
 | `<iframe>` | Tag untuk menampilkan halaman/konten dari situs lain di dalam halaman kita, dipakai untuk embed video YouTube |
+| `<div>` | Kotak pembungkus generik block, dipakai kalau tidak ada tag semantik yang cocok |
+| `<span>` | Kotak pembungkus generik inline, dipakai untuk menyorot sebagian teks |
 
 ## Isi folder
 
 - `index.html` — hasil akhir hands-on di atas.
-- `fahhh.mp3` — file audio untuk demo tag `<audio>` di Langkah 7.
+- `getout.mp3` — file audio untuk demo tag `<audio>` di Langkah 7.

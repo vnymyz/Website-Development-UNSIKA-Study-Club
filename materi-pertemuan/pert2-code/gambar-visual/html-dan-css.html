@@ -1,0 +1,728 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Demo Visual: HTML & CSS</title>
+<style>
+  :root {
+    --matcha-dark: #33422b;
+    --matcha-mid: #7c9473;
+    --matcha-light: #b7c9a8;
+    --sage-pale: #e9efe1;
+    --cream: #f6f3e7;
+    --gold: #c9a66b;
+    --code-bg: #22301c;
+    --code-text: #dcefd1;
+    --ink: #1f2937;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.5;
+  }
+
+  .hero {
+    background: var(--matcha-dark);
+    color: white;
+    padding: 64px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before, .hero::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    background: var(--matcha-mid);
+    opacity: 0.18;
+  }
+  .hero::before { width: 260px; height: 260px; top: -80px; left: -60px; }
+  .hero::after { width: 180px; height: 180px; bottom: -60px; right: 10%; background: var(--gold); opacity: 0.2; }
+  .hero h1 { margin: 0 0 8px; font-size: 2.2rem; position: relative; }
+  .hero p { margin: 0; color: var(--sage-pale); position: relative; }
+
+  section.demo {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px;
+    border-bottom: 1px solid #ddd6c4;
+  }
+  section.demo h2 {
+    color: var(--matcha-dark);
+    font-size: 1.5rem;
+    margin-bottom: 4px;
+  }
+  section.demo .sub {
+    color: var(--matcha-mid);
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+  }
+  section.demo p.desc { color: #444; max-width: 640px; }
+
+  .stage {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 24px;
+    margin-top: 16px;
+  }
+
+  .controls { margin-bottom: 16px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .controls button {
+    background: var(--matcha-mid);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .controls button:hover { background: var(--matcha-dark); transform: translateY(-2px); }
+  .controls button.active { background: var(--gold); color: var(--matcha-dark); font-weight: bold; }
+  .controls button.auto { background: var(--matcha-dark); }
+  @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(0.9); } 100% { transform: scale(1); } }
+  .controls button.pulse { animation: pulse 0.25s ease; }
+
+  code.tag { background: var(--code-bg); color: var(--code-text); padding: 2px 8px; border-radius: 4px; font-family: Consolas, monospace; }
+
+  /* ---------- Scroll reveal ---------- */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ---------- Section: Toggle HTML vs HTML+CSS ---------- */
+  .compare-toggle-row { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; flex-wrap: wrap; }
+  .toggle-switch {
+    position: relative; width: 64px; height: 32px;
+    background: var(--matcha-mid); border-radius: 999px; cursor: pointer;
+    transition: background 0.3s; flex-shrink: 0;
+  }
+  .toggle-switch::before {
+    content: ""; position: absolute; top: 3px; left: 3px;
+    width: 26px; height: 26px; background: white; border-radius: 50%;
+    transition: transform 0.3s; box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+  .toggle-switch.on { background: var(--gold); }
+  .toggle-switch.on::before { transform: translateX(32px); }
+  .compare-status { font-weight: bold; color: var(--matcha-dark); }
+  .compare-status .off { color: #b91c1c; }
+
+  .compare-stage { display: flex; justify-content: center; padding: 12px 0; }
+  .compare-card {
+    background: white; border: 1px solid #e5e7eb; border-radius: 12px;
+    padding: 20px; width: 260px; position: relative;
+    box-shadow: 0 2px 6px rgba(51,66,43,0.08);
+    transition: opacity 0.2s ease;
+  }
+  .compare-badge {
+    position: absolute; top: 12px; right: 12px;
+    background: var(--gold); color: var(--matcha-dark);
+    font-size: 11px; font-weight: bold; padding: 4px 10px;
+    border-radius: 999px; text-transform: uppercase;
+  }
+  .compare-card h3 { color: var(--matcha-dark); margin: 0 0 8px; }
+  .compare-card p { color: #555; font-size: 0.9rem; margin-bottom: 4px; }
+  .compare-card button {
+    margin-top: 12px; background: var(--matcha-mid); color: white;
+    border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer;
+    transition: background 0.2s;
+  }
+  .compare-card button:hover { background: var(--matcha-dark); }
+
+  .compare-stage.css-off .compare-card,
+  .compare-stage.css-off .compare-card * {
+    all: unset;
+    display: revert;
+  }
+  .compare-fade { opacity: 0; }
+
+  /* ---------- Section: Kesimpulan Visual ---------- */
+  .conclusion-row { display: flex; gap: 32px; justify-content: center; flex-wrap: wrap; padding: 8px 0; }
+  .conclusion-caption { text-align: center; font-weight: bold; color: var(--matcha-mid); margin-bottom: 10px; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.04em; }
+  .conclusion-off, .conclusion-off * { all: unset; display: revert; }
+
+  /* ---------- Section: Struktur HTML ---------- */
+  .struktur-box {
+    border: 3px solid var(--matcha-mid);
+    border-radius: 10px;
+    padding: 16px;
+    opacity: 0;
+    transform: translateY(14px);
+    animation: fadeSlide 0.6s ease forwards;
+  }
+  .struktur-box .label {
+    display: inline-block;
+    background: var(--matcha-dark);
+    color: white;
+    font-size: 0.75rem;
+    padding: 2px 10px;
+    border-radius: 999px;
+    margin-bottom: 8px;
+  }
+  .struktur-box.header { animation-delay: 0.1s; background: #fdf6e3; }
+  .struktur-box.main { animation-delay: 0.35s; background: var(--sage-pale); margin-top: 12px; }
+  .struktur-box.section-inner { animation-delay: 0.6s; border-style: dashed; margin-top: 10px; background: white; }
+  .struktur-box.footer { animation-delay: 0.9s; background: #f1ece0; margin-top: 12px; }
+  @keyframes fadeSlide { to { opacity: 1; transform: translateY(0); } }
+
+  /* ---------- Section: Div vs Span ---------- */
+  .div-demo {
+    border: 2px solid var(--matcha-dark);
+    background: var(--sage-pale);
+    padding: 12px;
+    border-radius: 8px;
+    position: relative;
+  }
+  .div-demo::after {
+    content: "DIV (block, satu baris penuh)";
+    position: absolute;
+    top: -12px;
+    left: 12px;
+    background: var(--matcha-dark);
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+  .span-demo {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--matcha-dark);
+    padding: 1px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    position: relative;
+  }
+  .span-demo::after {
+    content: "SPAN (inline)";
+    position: absolute;
+    bottom: -22px;
+    left: 0;
+    background: var(--matcha-dark);
+    color: white;
+    font-size: 0.65rem;
+    padding: 1px 6px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  /* ---------- Section: Box Model ---------- */
+  .box-model-wrap { display: flex; justify-content: center; padding: 24px 0; }
+  .bm-margin, .bm-border, .bm-padding, .bm-content {
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.3s, box-shadow 0.3s;
+    border-radius: 6px;
+  }
+  .bm-margin { background: #fdf1e0; padding: 24px; }
+  .bm-border { background: #e8c98a; padding: 12px; }
+  .bm-padding { background: var(--sage-pale); padding: 20px; }
+  .bm-content { background: var(--matcha-mid); color: white; width: 100px; height: 60px; font-size: 0.8rem; font-weight: bold; }
+  .bm-margin.glow { box-shadow: 0 0 0 4px var(--gold) inset; }
+  .bm-border.glow { box-shadow: 0 0 0 4px var(--gold) inset; }
+  .bm-padding.glow { box-shadow: 0 0 0 4px var(--gold) inset; }
+  .bm-content.glow { box-shadow: 0 0 0 4px var(--gold); }
+
+  /* ---------- Section: Display ---------- */
+  .display-stage { border: 1px dashed #ccc; padding: 12px; min-height: 90px; }
+  .display-box {
+    background: var(--matcha-mid);
+    color: white;
+    text-align: center;
+    padding: 10px;
+    border-radius: 6px;
+    margin: 4px;
+    transition: all 0.35s ease;
+  }
+
+  /* ---------- Section: Position ---------- */
+  .position-stage {
+    position: relative;
+    height: 220px;
+    border: 2px dashed var(--matcha-mid);
+    border-radius: 10px;
+    overflow: hidden;
+    background: repeating-linear-gradient(45deg, #fff, #fff 10px, var(--cream) 10px, var(--cream) 20px);
+  }
+  .position-ref {
+    position: absolute; top: 20px; left: 20px;
+    width: 140px; height: 90px;
+    background: white; border: 1px solid #ccc; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; color: #888;
+  }
+  .position-box {
+    width: 70px; height: 40px;
+    background: var(--gold);
+    color: var(--matcha-dark);
+    font-weight: bold;
+    font-size: 0.75rem;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 6px;
+    transition: all 0.5s cubic-bezier(.4,0,.2,1);
+  }
+  .position-box.pos-static { position: static; margin: 60px 0 0 40px; }
+  .position-box.pos-relative { position: relative; top: 30px; left: 60px; }
+  .position-box.pos-absolute { position: absolute; top: 20px; left: 20px; }
+  .position-box.pos-fixed { position: absolute; bottom: 10px; right: 10px; }
+
+  /* ---------- Section: Flexbox ---------- */
+  .flex-stage {
+    display: flex;
+    border: 1px dashed #ccc;
+    border-radius: 8px;
+    min-height: 120px;
+    padding: 8px;
+    gap: 8px;
+    transition: all 0.4s ease;
+  }
+  .flex-item {
+    background: var(--matcha-dark);
+    color: white;
+    width: 60px; height: 60px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: bold;
+    transition: all 0.4s ease;
+  }
+
+  /* ---------- Section: Hover ---------- */
+  .hover-row { display: flex; gap: 16px; flex-wrap: wrap; }
+  .hover-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    padding: 16px 24px;
+    border-radius: 10px;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    cursor: pointer;
+  }
+  .hover-card:hover {
+    transform: translateY(-6px) scale(1.03);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.12);
+    background: var(--sage-pale);
+  }
+  .hover-btn {
+    background: var(--matcha-mid);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .hover-btn:hover { background: var(--matcha-dark); transform: translateY(-2px); }
+
+  /* ---------- Info box: kapan dipakai di web asli ---------- */
+  .info-box {
+    background: var(--sage-pale);
+    border-left: 4px solid var(--matcha-mid);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-top: 16px;
+    font-size: 0.9rem;
+    color: var(--ink);
+  }
+  .info-box .info-title { font-weight: bold; color: var(--matcha-dark); margin-bottom: 6px; display: block; }
+  .info-box ul { margin: 6px 0 0 18px; padding: 0; }
+  .info-box li { margin-bottom: 4px; }
+
+  /* ---------- Contoh nyata: mini website ---------- */
+  .mini-site {
+    border: 2px solid var(--matcha-mid);
+    border-radius: 10px;
+    overflow: hidden;
+    font-size: 0.75rem;
+  }
+  .mini-site .m-header { background: var(--matcha-dark); color: white; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; }
+  .mini-site .m-main { padding: 12px; background: white; }
+  .mini-site .m-section { background: var(--cream); border-radius: 6px; padding: 8px; margin-bottom: 8px; }
+  .mini-site .m-footer { background: #eee5cf; color: var(--matcha-dark); text-align: center; padding: 6px; }
+
+  .example-row { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 14px; }
+  .example-card { flex: 1; min-width: 180px; background: white; border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px; }
+  .example-card .example-label { font-size: 0.7rem; font-weight: bold; text-transform: uppercase; color: var(--gold); letter-spacing: 0.04em; }
+
+  footer.credit {
+    text-align: center;
+    padding: 32px 16px;
+    color: var(--matcha-mid);
+    font-size: 0.85rem;
+  }
+</style>
+</head>
+<body>
+
+  <div class="hero">
+    <h1>HTML &amp; CSS: Cara Kerjanya</h1>
+    <p>Demo visual interaktif — Pertemuan 2, Website UNSIKA</p>
+  </div>
+
+  <section class="demo reveal">
+    <div class="sub">Perbandingan Langsung</div>
+    <h2>HTML Polos vs HTML + CSS</h2>
+    <p class="desc">Ini kartu produk yang sama persis (HTML-nya tidak berubah sama sekali). Nyalakan/matikan sakelarnya buat lihat bedanya CSS bikin apa.</p>
+    <div class="stage">
+      <div class="compare-toggle-row">
+        <div class="toggle-switch" id="compare-toggle" role="button" aria-label="Toggle CSS"></div>
+        <span class="compare-status" id="compare-status">HTML + CSS (styling aktif)</span>
+      </div>
+      <div class="compare-stage" id="compare-stage">
+        <div class="compare-card">
+          <span class="compare-badge">Kuliner</span>
+          <h3>Warung Bu Sari</h3>
+          <p>Kategori: Kuliner</p>
+          <p>Alamat: Jl. Merdeka No. 10, Karawang</p>
+          <button>Hubungi</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="demo reveal">
+    <div class="sub">Struktur Dasar</div>
+    <h2>Susunan Tag Semantik</h2>
+    <p class="desc">Tiap tag punya tempatnya sendiri. Perhatikan urutan munculnya kotak di bawah — itu urutan tag ditulis di HTML.</p>
+    <div class="stage">
+      <div class="struktur-box header"><span class="label">&lt;header&gt;</span><div>Logo + menu navigasi</div></div>
+      <div class="struktur-box main">
+        <span class="label">&lt;main&gt;</span>
+        <div class="struktur-box section-inner"><span class="label">&lt;section&gt;</span> Daftar UMKM</div>
+      </div>
+      <div class="struktur-box footer"><span class="label">&lt;footer&gt;</span> Hak cipta</div>
+    </div>
+    <div class="info-box">
+      <span class="info-title">📌 Dipakai buat apa di website asli?</span>
+      <ul>
+        <li><code class="tag">&lt;header&gt;</code> — bagian paling atas halaman: logo, nama website, menu navigasi. Biasanya cuma 1 per halaman dan selalu muncul di posisi sama di tiap halaman.</li>
+        <li><code class="tag">&lt;main&gt;</code> — konten utama yang jadi alasan orang buka halaman ini (isi artikel, daftar produk, dsb). Cuma boleh ada 1 per halaman.</li>
+        <li><code class="tag">&lt;section&gt;</code> — mengelompokkan konten yang temanya sama dan biasanya punya judul sendiri (misal: "Daftar UMKM", "Tentang Kami"). Boleh banyak dalam 1 halaman.</li>
+        <li><code class="tag">&lt;footer&gt;</code> — bagian paling bawah: hak cipta, alamat, link sosial media, kontak.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="demo reveal">
+    <div class="sub">Kotak Generik</div>
+    <h2>&lt;div&gt; vs &lt;span&gt;</h2>
+    <p class="desc"><code class="tag">div</code> ambil satu baris penuh (block). <code class="tag">span</code> cuma sebesar isinya, nempel di tengah kalimat (inline).</p>
+    <div class="stage">
+      <div class="div-demo">
+        <p style="margin:0 0 24px 0;">Ini isi sebuah &lt;div&gt; — perhatikan lebarnya penuh satu baris.</p>
+      </div>
+      <p style="margin-top:28px;">Status warung: <span class="span-demo">Buka</span> sampai jam 9 malam.</p>
+    </div>
+    <div class="info-box">
+      <span class="info-title">📌 Dipakai buat apa di website asli?</span>
+      <ul>
+        <li><code class="tag">&lt;div&gt;</code> — pembungkus umum buat sekelompok elemen supaya bisa di-styling/ditata bareng. Contoh nyata: kartu produk (bungkus gambar+judul+harga jadi satu blok), wrapper untuk Flexbox/Grid, container buat batasi lebar konten.</li>
+        <li><code class="tag">&lt;span&gt;</code> — buat menandai sebagian kecil teks di tengah kalimat/paragraf. Contoh nyata: badge kecil ("Baru!", "Diskon"), kata yang diberi warna beda, ikon kecil yang nempel di sebelah teks.</li>
+        <li>Bedanya: <code class="tag">div</code> block (ambil satu baris penuh, buat bungkus <em>blok</em> konten), <code class="tag">span</code> inline (cuma sebesar isinya, buat sorot <em>sebagian</em> teks). Keduanya tidak punya makna semantik — dipakai kalau memang tidak ada tag semantik yang cocok.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="demo reveal">
+    <div class="sub">Fondasi CSS</div>
+    <h2>Box Model</h2>
+    <p class="desc">Klik salah satu tombol untuk menyorot lapisan itu di kotak sebelah kanan.</p>
+    <div class="stage">
+      <div class="controls" id="bm-controls">
+        <button data-layer="margin">Margin</button>
+        <button data-layer="border">Border</button>
+        <button data-layer="padding">Padding</button>
+        <button data-layer="content">Content</button>
+      </div>
+      <div class="box-model-wrap">
+        <div class="bm-margin" id="bm-margin">
+          <div class="bm-border" id="bm-border">
+            <div class="bm-padding" id="bm-padding">
+              <div class="bm-content" id="bm-content">Isi</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="info-box">
+      <span class="info-title">📌 Pengertian tiap lapisan</span>
+      <ul>
+        <li><strong>Content</strong> — isi asli elemen (teks, gambar). Ini yang pertama ditulis, sisanya "bungkus" di sekelilingnya.</li>
+        <li><strong>Padding</strong> — jarak <em>di dalam</em>, antara isi dan garis border. Dipakai supaya teks/isi tidak mepet ke pinggir — contoh: tombol tanpa padding kelihatan sempit dan teksnya nempel ke tepi.</li>
+        <li><strong>Border</strong> — garis pembatas visual di sekeliling elemen. Dipakai buat kartu produk (garis tipis abu-abu), pembatas antar section, atau garis warna saat elemen di-fokus.</li>
+        <li><strong>Margin</strong> — jarak <em>di luar</em>, antara elemen ini dan elemen tetangganya. Dipakai supaya kartu-kartu produk tidak saling mepet, atau paragraf punya jarak dari judul di atasnya.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="demo reveal">
+    <div class="sub">Fondasi CSS</div>
+    <h2>Display: block / inline / inline-block</h2>
+    <p class="desc">Klik tombolnya, lihat 3 kotak di bawah berubah susunannya secara live.</p>
+    <div class="stage">
+      <div class="controls" id="display-controls">
+        <button data-display="block" class="active">display: block</button>
+        <button data-display="inline">display: inline</button>
+        <button data-display="inline-block">display: inline-block</button>
+        <button id="display-auto" class="auto">▶ Putar Otomatis</button>
+      </div>
+      <div class="display-stage" id="display-stage">
+        <div class="display-box" style="display:block;">Kotak 1</div>
+        <div class="display-box" style="display:block;">Kotak 2</div>
+        <div class="display-box" style="display:block;">Kotak 3</div>
+      </div>
+    </div>
+    <div class="info-box">
+      <span class="info-title">📌 Dipakai buat apa di website asli?</span>
+      <ul>
+        <li><strong>block</strong> — elemen yang harus berdiri sendiri satu baris: paragraf, section, div, heading. Default-nya sebagian besar elemen "besar".</li>
+        <li><strong>inline</strong> — elemen kecil yang nempel di tengah kalimat: <code class="tag">span</code>, <code class="tag">a</code>, <code class="tag">strong</code>. Tidak bisa diatur lebar/tinggi/margin atas-bawah.</li>
+        <li><strong>inline-block</strong> — paling sering dipakai untuk menu navigasi (link-link sejajar horizontal tapi masing-masing bisa diberi padding/lebar) dan badge/tombol kecil yang harus sejajar tapi tetap punya ukuran presisi.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="demo reveal">
+    <div class="sub">Fondasi CSS</div>
+    <h2>Position: static / relative / absolute</h2>
+    <p class="desc">Kotak kuning akan berpindah sesuai tombol yang dipilih. Kotak putih di pojok kiri-atas adalah "parent" referensinya.</p>
+    <div class="stage">
+      <div class="controls" id="position-controls">
+        <button data-pos="static" class="active">static</button>
+        <button data-pos="relative">relative</button>
+        <button data-pos="absolute">absolute</button>
+        <button data-pos="fixed">fixed (dalam parent)</button>
+        <button id="position-auto" class="auto">▶ Putar Otomatis</button>
+      </div>
+      <div class="position-stage">
+        <div class="position-ref">parent (relative)</div>
+        <div class="position-box pos-static" id="position-box">saya</div>
+      </div>
+    </div>
+    <div class="info-box">
+      <span class="info-title">📌 Dipakai buat apa di website asli?</span>
+      <ul>
+        <li><strong>static</strong> — default, ikut alur normal dokumen. Dipakai kalau memang tidak butuh geser-geser posisi.</li>
+        <li><strong>relative</strong> — dipakai kalau elemen mau digeser sedikit dari posisi normalnya, atau (lebih sering) dipakai di elemen <em>parent</em> supaya jadi acuan buat anaknya yang <code class="tag">absolute</code>.</li>
+        <li><strong>absolute</strong> — dipakai buat badge notifikasi di pojok ikon, tombol close (x) di pojok modal/popup, watermark di pojok gambar — semua yang harus "nempel presisi" di satu titik dan tidak ikut mendorong elemen lain.</li>
+        <li><strong>fixed</strong> / <strong>sticky</strong> — dipakai buat navbar yang tetap kelihatan saat halaman di-scroll ke bawah (sangat umum di website nyata).</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="demo reveal">
+    <div class="sub">Layout</div>
+    <h2>Flexbox</h2>
+    <p class="desc">Atur <code class="tag">justify-content</code> dan lihat 3 kotak bergeser otomatis.</p>
+    <div class="stage">
+      <div class="controls" id="flex-controls">
+        <button data-justify="flex-start" class="active">flex-start</button>
+        <button data-justify="center">center</button>
+        <button data-justify="space-between">space-between</button>
+        <button data-justify="flex-end">flex-end</button>
+      </div>
+      <div class="flex-stage" id="flex-stage" style="justify-content: flex-start;">
+        <div class="flex-item">1</div>
+        <div class="flex-item">2</div>
+        <div class="flex-item">3</div>
+      </div>
+    </div>
+    <div class="info-box">
+      <span class="info-title">📌 Dipakai buat apa di website asli?</span>
+      <ul>
+        <li>Menyusun kartu-kartu produk/UMKM sejajar horizontal dan otomatis pindah baris kalau layar sempit (<code class="tag">flex-wrap</code>).</li>
+        <li>Menyusun menu navigasi di header supaya logo di kiri dan link-link di kanan (<code class="tag">justify-content: space-between</code>).</li>
+        <li>Menengahkan konten secara vertikal+horizontal tanpa trik ribet (<code class="tag">align-items: center; justify-content: center;</code>) — ini pola paling sering dicari pemula CSS.</li>
+        <li>Menyusun footer jadi beberapa kolom (kontak, sosial media, peta situs) yang sejajar.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="demo reveal" style="border-bottom:none;">
+    <div class="sub">Interaksi Tanpa JS</div>
+    <h2>Pseudo-class :hover</h2>
+    <p class="desc">Arahkan kursor (jangan diklik) ke kartu dan tombol di bawah ini.</p>
+    <div class="stage">
+      <div class="hover-row">
+        <div class="hover-card">Arahkan kursor ke sini</div>
+        <button class="hover-btn">Tombol Hover</button>
+      </div>
+    </div>
+    <div class="info-box">
+      <span class="info-title">📌 Dipakai buat apa di website asli?</span>
+      <ul>
+        <li>Tombol berubah warna/naik dikit saat disorot — kasih sinyal "ini bisa diklik" tanpa perlu JavaScript sama sekali.</li>
+        <li>Link navigasi dapat garis bawah/warna beda saat disorot — memudahkan orientasi pengguna sedang arahkan kursor ke mana.</li>
+        <li>Kartu produk sedikit membesar/mengangkat bayangan saat disorot — efek ini yang bikin toko online kelihatan "hidup" dan responsif terhadap interaksi pengguna.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="demo reveal" style="border-bottom:none;">
+    <div class="sub">Rangkuman</div>
+    <h2>Kesimpulan Visual</h2>
+    <p class="desc">Side-by-side terakhir: kartu yang sama, dua nasib berbeda.</p>
+    <div class="stage">
+      <div class="conclusion-row">
+        <div>
+          <div class="conclusion-caption">Tanpa CSS</div>
+          <div class="conclusion-off">
+            <div class="compare-card">
+              <span class="compare-badge">Fashion</span>
+              <h3>Batik Karawang Asli</h3>
+              <p>Kategori: Fashion</p>
+              <p>Alamat: Jl. Kertabumi No. 5, Karawang</p>
+              <button>Hubungi</button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="conclusion-caption">Dengan CSS</div>
+          <div class="compare-card">
+            <span class="compare-badge">Fashion</span>
+            <h3>Batik Karawang Asli</h3>
+            <p>Kategori: Fashion</p>
+            <p>Alamat: Jl. Kertabumi No. 5, Karawang</p>
+            <button>Hubungi</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="credit">Dibuat untuk Pertemuan 2 — Website UNSIKA. Kembali ke <code class="tag">README.md</code> untuk penjelasan lengkap tiap konsep.</footer>
+
+<script>
+  // Pulse micro-interaction tiap tombol .controls diklik
+  document.querySelectorAll('.controls button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.classList.remove('pulse');
+      void btn.offsetWidth; // restart animasi
+      btn.classList.add('pulse');
+    });
+  });
+
+  // Box model highlight
+  const bmLayers = { margin: document.getElementById('bm-margin'), border: document.getElementById('bm-border'), padding: document.getElementById('bm-padding'), content: document.getElementById('bm-content') };
+  document.getElementById('bm-controls').addEventListener('click', function (e) {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    Object.values(bmLayers).forEach(el => el.classList.remove('glow'));
+    document.querySelectorAll('#bm-controls button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    bmLayers[btn.dataset.layer].classList.add('glow');
+  });
+
+  // ---------- Display: block / inline / inline-block ----------
+  const displayValues = ['block', 'inline', 'inline-block'];
+  function setDisplay(value) {
+    document.querySelectorAll('#display-controls button[data-display]').forEach(b => {
+      b.classList.toggle('active', b.dataset.display === value);
+    });
+    document.querySelectorAll('#display-stage .display-box').forEach(box => {
+      box.style.display = value;
+      box.style.width = value === 'inline-block' ? '90px' : '';
+    });
+  }
+  document.getElementById('display-controls').addEventListener('click', function (e) {
+    const btn = e.target.closest('button[data-display]');
+    if (!btn) return;
+    stopDisplayAuto();
+    setDisplay(btn.dataset.display);
+  });
+  let displayAutoTimer = null;
+  function stopDisplayAuto() {
+    clearInterval(displayAutoTimer);
+    displayAutoTimer = null;
+    document.getElementById('display-auto').textContent = '▶ Putar Otomatis';
+  }
+  document.getElementById('display-auto').addEventListener('click', function () {
+    if (displayAutoTimer) { stopDisplayAuto(); return; }
+    this.textContent = '⏸ Berhenti';
+    let i = 0;
+    setDisplay(displayValues[i]);
+    displayAutoTimer = setInterval(() => {
+      i = (i + 1) % displayValues.length;
+      setDisplay(displayValues[i]);
+    }, 1500);
+  });
+
+  // ---------- Position: static / relative / absolute / fixed ----------
+  const positionValues = ['static', 'relative', 'absolute', 'fixed'];
+  function setPosition(value) {
+    document.querySelectorAll('#position-controls button[data-pos]').forEach(b => {
+      b.classList.toggle('active', b.dataset.pos === value);
+    });
+    document.getElementById('position-box').className = 'position-box pos-' + value;
+  }
+  document.getElementById('position-controls').addEventListener('click', function (e) {
+    const btn = e.target.closest('button[data-pos]');
+    if (!btn) return;
+    stopPositionAuto();
+    setPosition(btn.dataset.pos);
+  });
+  let positionAutoTimer = null;
+  function stopPositionAuto() {
+    clearInterval(positionAutoTimer);
+    positionAutoTimer = null;
+    document.getElementById('position-auto').textContent = '▶ Putar Otomatis';
+  }
+  document.getElementById('position-auto').addEventListener('click', function () {
+    if (positionAutoTimer) { stopPositionAuto(); return; }
+    this.textContent = '⏸ Berhenti';
+    let i = 0;
+    setPosition(positionValues[i]);
+    positionAutoTimer = setInterval(() => {
+      i = (i + 1) % positionValues.length;
+      setPosition(positionValues[i]);
+    }, 1500);
+  });
+
+  // Flexbox justify-content toggle
+  document.getElementById('flex-controls').addEventListener('click', function (e) {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    document.querySelectorAll('#flex-controls button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('flex-stage').style.justifyContent = btn.dataset.justify;
+  });
+
+  // ---------- Toggle HTML Polos vs HTML+CSS ----------
+  const compareToggle = document.getElementById('compare-toggle');
+  const compareStage = document.getElementById('compare-stage');
+  const compareStatus = document.getElementById('compare-status');
+  let cssOn = true;
+  compareToggle.addEventListener('click', function () {
+    const card = compareStage.querySelector('.compare-card');
+    card.classList.add('compare-fade');
+    setTimeout(() => {
+      cssOn = !cssOn;
+      compareToggle.classList.toggle('on', !cssOn);
+      compareStage.classList.toggle('css-off', !cssOn);
+      compareStatus.innerHTML = cssOn
+        ? 'HTML + CSS (styling aktif)'
+        : 'HTML <span class="off">saja</span> (CSS dimatikan)';
+      card.classList.remove('compare-fade');
+    }, 180);
+  });
+
+  // ---------- Scroll reveal (IntersectionObserver) ----------
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+</script>
+
+</body>
+</html>
