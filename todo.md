@@ -6,7 +6,7 @@ Daftar kerjaan yang belum selesai per hari ini. Dicek dan diupdate tiap ada prog
 
 - [x] Pertemuan 1 — `pert1-code/index.html` selesai (hasil hands-on) + `pert1-code-bonus-multipage/` (opsional).
 - [ ] Pertemuan 2 — kode (`style.css`, `.gitignore` di dalam proyek peserta, dst) belum dibuat. Materi (`README.md`) sudah lengkap.
-- [ ] Pertemuan 3 — kode (`app.js`) belum dibuat. Materi sudah lengkap.
+- [x] Pertemuan 3 — kode selesai: `pert3-code/fundamental-javascript/` (playground konsep dasar) + `pert3-code/implementasi-umkm/` (lanjutan pert2-code, `app.js` render+filter+validasi). Materi sudah lengkap.
 - [ ] Pertemuan 4 — kode (koneksi Supabase) belum dibuat. Materi sudah lengkap.
 - [ ] Pertemuan 5 — kode (CRUD lengkap + auth) belum dibuat. Materi sudah lengkap.
 - [ ] Pertemuan 6 — kode (README proyek contoh, config deploy) belum dibuat. Materi sudah lengkap.

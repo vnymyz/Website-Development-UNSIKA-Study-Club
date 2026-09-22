@@ -1,10 +1,10 @@
 # Pertemuan 3 — JavaScript Dasar & DOM
 
-> Kode untuk sesi ini belum dibuat — folder ini baru berisi materi. File kode (`app.js`, dst.) akan ditambahkan menjelang/pada pertemuan 3, mengikuti pola `pert1-code`.
+`fundamental-javascript/` dan `implementasi-umkm/` di folder ini adalah **hasil akhir** hands-on sesi ini. Buka lewat Live Server (klik kanan `index.html` di VS Code → **Open with Live Server**). Kalau ikut kelas dari awal, jangan buka dulu — ikuti bagian Hands-on di bawah dan bikin sendiri; folder ini jadi jaring pengaman kalau tertinggal.
 
 **Durasi:** 19.30–21.00 WIB
 **Tools:** VS Code, Live Server, Git
-**Output:** Peserta dapat membuat halaman interaktif: render data dari array, filter kategori, dan validasi form dengan JavaScript.
+**Output:** Peserta dapat membuat halaman interaktif: render data dari array, filter kategori + pencarian, dan validasi form dengan JavaScript.
 
 ## Tujuan belajar
 
@@ -20,9 +20,9 @@
 |---|---|
 | 19.30–19.40 | Pembukaan, ice breaking: "pernah nggak isi form terus tombolnya nggak ngapa-ngapain?" |
 | 19.40–19.55 | Teori: variabel, tipe data, kondisi, loop, function |
-| 19.55–20.10 | Teori: array, object, DOM |
-| 20.10–20.35 | Hands-on: render daftar UMKM dari array memakai JavaScript |
-| 20.35–20.55 | Hands-on: filter kategori dan validasi form |
+| 19.55–20.10 | Teori: array, object, DOM, event |
+| 20.10–20.25 | Hands-on: coba satu-satu file di `fundamental-javascript/` |
+| 20.25–20.55 | Hands-on: render UMKM dari array, filter + pencarian, validasi form di `implementasi-umkm/` |
 | 20.55–21.00 | Rangkuman dan pengantar kuis 3 |
 
 ## Teori
@@ -186,19 +186,18 @@ tombol.addEventListener("click", function () {
 
 ### Merender list data ke HTML
 
-Menggabungkan array, loop, dan DOM: kita bisa mengubah data JavaScript menjadi tampilan HTML secara otomatis.
+Menggabungkan array, loop, dan DOM: kita bisa mengubah data JavaScript menjadi tampilan HTML secara otomatis. Ini pola yang sama nanti dipakai buat render kartu UMKM asli di `implementasi-umkm/`:
 
 ```javascript
 function renderUmkm(data) {
-  const container = document.querySelector("#daftar-umkm-container");
+  const container = document.querySelector(".grid-umkm");
   container.innerHTML = "";
 
   data.forEach(function (item) {
     container.innerHTML += `
-      <article class="kartu">
+      <article class="kartu-umkm">
         <h3>${item.nama}</h3>
         <p>Kategori: ${item.kategori}</p>
-        <p>Alamat: ${item.alamat}</p>
       </article>
     `;
   });
@@ -209,172 +208,160 @@ function renderUmkm(data) {
 - `data.forEach(...)` — mengulang tiap item dalam array, sama seperti `for`, tapi lebih ringkas untuk array.
 - Tanda kutip backtick `` ` `` `${item.nama}` — disebut **template literal**, cara menyisipkan variabel langsung ke dalam teks/HTML.
 
+Sampai sini semua contohnya masih sederhana. Sekarang mari diterapkan ke web UMKM yang sudah dibuat pertemuan 2 — mulai dari coba dulu satu-satu konsepnya, baru sambungkan ke web asli.
+
 ## Hands-on: Langkah demi Langkah
 
-### Langkah 1 — Membuat file JavaScript dan menghubungkannya
+Ada dua folder kode di sini. Kerjakan **Bagian A** dulu sampai semua paham, baru lanjut **Bagian B**.
 
-1. Buat file baru `app.js` di folder `website-umkm`.
-2. Di `index.html`, tambahkan sebelum `</body>`:
+### Bagian A — Latihan Fundamental (`fundamental-javascript/`)
+
+Satu file = satu konsep. Buka `fundamental-javascript/index.html` lewat Live Server, lalu buka juga `Inspect (F12) > Console` — sebagian hasilnya cuma muncul di Console, bukan di halaman.
+
+#### Langkah 1 — `var.js`: variabel dan tipe data
+
+Buka file `var.js`, baca kodenya, lalu lihat hasilnya di section "1. Variabel & Tipe Data" dan di Console.
+
+**Cek hasil:** di halaman muncul teks nama usaha + kategori. Di Console muncul 4 baris `typeof` (`string`, `number`, `boolean`, `undefined`).
+
+#### Langkah 2 — `condition.js`: if/else
+
+Buka `condition.js`. Coba ubah nilai `stok` jadi `0`, simpan, refresh halaman.
+
+**Cek hasil:** teks berubah dari "Masih tersedia" jadi "Stok habis".
+
+#### Langkah 3 — `loop.js`: perulangan for
+
+Buka `loop.js`. Coba ubah angka `5` di `i <= 5` jadi `10`.
+
+**Cek hasil:** section "3. Perulangan" menampilkan angka 1 sampai 10, bukan cuma sampai 5.
+
+#### Langkah 4 — `function.js`: function
+
+Buka `function.js`. Coba panggil `formatRupiah` dengan angka lain, misalnya `formatRupiah(500000)`, tambahkan `console.log`-nya.
+
+**Cek hasil:** muncul `Rp 500.000` di Console.
+
+#### Langkah 5 — `arrayobject.js`: array dan object
+
+Buka `arrayobject.js`. Coba tambah satu produk baru di `daftarProduk`.
+
+**Cek hasil:** kalau ambil `daftarProduk[2].nama`, muncul nama produk baru yang barusan ditambahkan.
+
+#### Langkah 6 — `consolelog.js`: console.log
+
+Buka `consolelog.js` dan buka Console-nya. Coba tambah satu `console.log` sendiri dengan data apa saja.
+
+**Cek hasil:** muncul beberapa jenis data di Console (teks, angka, boolean, object) — bukti `console.log` bisa menampilkan tipe data apa pun.
+
+#### Langkah 7 — `inputoutput.js`: input dan output
+
+Ketik nama kamu di kotak input section "7. Input & Output", klik tombol "Sapa Aku".
+
+**Cek hasil:** muncul teks "Halo, [nama kamu]!" di bawah tombol. Coba klik tanpa isi apa-apa — muncul "Ketik nama dulu ya!".
+
+#### Langkah 8 — `dom.js`: querySelector, textContent, style
+
+Buka `dom.js`, lihat section "8. DOM" — teksnya sudah berubah otomatis begitu halaman dimuat. Coba ganti warnanya di kode (`targetDom.style.color`).
+
+**Cek hasil:** teks di section itu berubah warna/tebal sesuai yang diubah di kode.
+
+#### Langkah 9 — `event.js`: addEventListener
+
+Klik tombol "Klik Aku" di section "9. Event" beberapa kali.
+
+**Cek hasil:** angka jumlah klik di bawah tombol terus bertambah setiap diklik.
+
+Sudah paham semua 9 konsep di atas? Lanjut ke Bagian B.
+
+### Bagian B — Implementasi ke Website UMKM Pertemuan 2 (`implementasi-umkm/`)
+
+Folder ini lanjutan dari `pert2-code` — HTML dan CSS-nya sama persis, bedanya sekarang ditambah `app.js` supaya direktori UMKM-nya beneran jalan (bukan cuma tampilan).
+
+#### Langkah 1 — Menghubungkan `app.js` ke `index.html`
+
+1. Cek di `implementasi-umkm/index.html`, sebelum `</body>` sudah ada baris:
 
 ```html
 <script src="app.js"></script>
 ```
 
-3. Isi `app.js` dengan:
+2. Buka `Inspect (F12) > Console`, refresh halaman.
 
-```javascript
-console.log("app.js berhasil terhubung");
-```
+**Cek hasil:** tidak ada error merah di Console. Kartu UMKM di section Direktori sudah muncul (dirender `app.js`, bukan ditulis manual lagi di HTML).
 
-4. Simpan, buka `Inspect` (`F12`) di browser, klik tab **Console**.
+**Kalau error:** kalau muncul error `app.js` tidak ditemukan, cek nama file dan lokasinya — harus persis satu folder dengan `index.html`.
 
-**Cek hasil:** muncul tulisan "app.js berhasil terhubung" di Console.
+#### Langkah 2 — Data UMKM sebagai array of object
 
-**Kalau error:** kalau tidak muncul apa-apa, cek posisi `<script>` — harus setelah semua HTML di `<body>`, dan cek nama file sudah persis `app.js`.
+Buka `app.js`, lihat variabel `daftarUmkm` di paling atas — isinya 6 UMKM yang sama seperti yang dulu ditulis manual di HTML pertemuan 2, sekarang jadi data.
 
-### Langkah 2 — Menyiapkan data UMKM dalam array of object
+**Cek hasil:** di Console, ketik `daftarUmkm` lalu Enter — muncul array berisi 6 object, bisa diklik untuk lihat isinya.
 
-Ganti isi `app.js` dengan:
+#### Langkah 3 — Function `renderUmkm()`
 
-```javascript
-const daftarUmkm = [
-  { nama: "Warung Bu Sari", kategori: "Kuliner", alamat: "Jl. Merdeka No. 10, Karawang" },
-  { nama: "Batik Karawang Asli", kategori: "Fashion", alamat: "Jl. Kertabumi No. 5, Karawang" },
-  { nama: "Anyaman Bambu Pak Jaya", kategori: "Kerajinan", alamat: "Jl. Tuparev No. 22, Karawang" },
-  { nama: "Kopi Senja Karawang", kategori: "Kuliner", alamat: "Jl. Ahmad Yani No. 8, Karawang" }
-];
+Baca function `renderUmkm(data)` di `app.js`. Perhatikan markup yang dibuat lewat template literal — persis sama dengan struktur `<article class="kartu-umkm">` yang dulu ditulis manual, supaya CSS-nya tetap kena.
 
-console.log(daftarUmkm);
-```
+**Cek hasil:** tampilan 6 kartu UMKM di halaman sama persis dengan versi pertemuan 2 — bedanya sekarang datanya dari JavaScript, bukan HTML manual.
 
-**Cek hasil:** di Console browser muncul array berisi 4 object, bisa diklik untuk dilihat isinya.
+**Kalau error:** kalau kartu tidak muncul sama sekali, buka Console — biasanya `querySelector(".grid-umkm")` mengembalikan `null` karena classnya salah ketik atau elemennya belum ada saat `app.js` dijalankan.
 
-### Langkah 3 — Menyiapkan container di HTML
+#### Langkah 4 — Memfungsikan dropdown kategori
 
-Di `index.html`, ganti isi section `daftar-umkm` — hapus tiga `<article>` yang ditulis manual dulu, ganti jadi:
+Baca bagian `selectKategori.addEventListener("change", ...)` di `app.js`. Coba ganti dropdown "Semua kategori" di halaman jadi "Kuliner".
 
-```html
-<section id="daftar-umkm">
-  <h2>Daftar UMKM</h2>
-  <div class="daftar-umkm" id="daftar-umkm-container"></div>
-</section>
-```
+**Cek hasil:** kartu yang tampil cuma UMKM kategori Kuliner (Warung Bu Sari, Kopi Rawa Gede). Balikin ke "Semua kategori", semua kartu muncul lagi.
 
-**Cek hasil:** section "Daftar UMKM" jadi kosong di browser (wajar, karena `<article>` manual sudah dihapus, JS belum merender apa-apa).
+#### Langkah 5 — Memfungsikan pencarian nama
 
-### Langkah 4 — Menulis function render dan memanggilnya
+Baca function `terapkanFilter()` — perhatikan cara dia baca DUA input sekaligus (kotak cari dan dropdown kategori), digabung pakai `&&` di dalam `filter()`. Coba ketik "batik" di kotak cari.
 
-Tambahkan di `app.js`, di bawah `daftarUmkm`:
+**Cek hasil:** cuma kartu "Batik Karawang Asli" yang muncul. Coba kombinasikan: pilih kategori "Kuliner" lalu ketik "kopi" — cuma "Kopi Rawa Gede" yang muncul.
 
-```javascript
-function renderUmkm(data) {
-  const container = document.querySelector("#daftar-umkm-container");
-  container.innerHTML = "";
+**Kalau error:** kalau hasil pencarian tidak berubah sama sekali, cek event yang dipasang di `inputCari` — harus `"input"`, bukan `"click"` (tidak ada yang diklik di kotak teks).
 
-  data.forEach(function (item) {
-    container.innerHTML += `
-      <article class="kartu">
-        <h3>${item.nama}</h3>
-        <p>Kategori: ${item.kategori}</p>
-        <p>Alamat: ${item.alamat}</p>
-      </article>
-    `;
-  });
-}
+#### Langkah 6 — Pesan "tidak ditemukan"
 
-renderUmkm(daftarUmkm);
-```
+Coba ketik nama yang tidak ada di daftar, misalnya "zzz".
 
-**Cek hasil:** empat kartu UMKM muncul kembali di halaman, kali ini dirender oleh JavaScript dari data array, bukan ditulis manual di HTML.
+**Cek hasil:** muncul teks "Tidak ada UMKM yang cocok." di tempat kartu, bukan halaman kosong tanpa keterangan.
 
-**Kalau error:** kalau container tetap kosong, buka Console — biasanya ada pesan error `querySelector` mengembalikan `null` karena `id` di HTML dan JavaScript tidak sama persis (perhatikan huruf besar/kecil dan tanda `-`).
+#### Langkah 7 — Validasi form kontak
 
-### Langkah 5 — Menambahkan tombol filter kategori
+Scroll ke section Kontak. Klik "Kirim pesan" tanpa mengisi apa-apa.
 
-Di `index.html`, tambahkan sebelum `<div id="daftar-umkm-container">`:
+**Cek hasil:** muncul peringatan "Nama dan pesan tidak boleh kosong!". Isi nama dan pesan, klik lagi — muncul ucapan terima kasih, form jadi kosong lagi, dan di Console muncul `Pesan terkirim: {...}`.
 
-```html
-<div class="filter">
-  <button data-kategori="Semua">Semua</button>
-  <button data-kategori="Kuliner">Kuliner</button>
-  <button data-kategori="Fashion">Fashion</button>
-  <button data-kategori="Kerajinan">Kerajinan</button>
-</div>
-```
+**Kalau error:** kalau form malah reload halaman, cek `event.preventDefault()` sudah dipanggil di paling atas function submit.
 
-Tambahkan di `app.js`, di bawah `renderUmkm(daftarUmkm);`:
-
-```javascript
-const tombolFilter = document.querySelectorAll(".filter button");
-
-tombolFilter.forEach(function (tombol) {
-  tombol.addEventListener("click", function () {
-    const kategoriDipilih = tombol.dataset.kategori;
-
-    if (kategoriDipilih === "Semua") {
-      renderUmkm(daftarUmkm);
-    } else {
-      const hasilFilter = daftarUmkm.filter(function (item) {
-        return item.kategori === kategoriDipilih;
-      });
-      renderUmkm(hasilFilter);
-    }
-  });
-});
-```
-
-Penjelasan:
-- `document.querySelectorAll(".filter button")` — mengambil **semua** tombol filter (beda dengan `querySelector` yang cuma ambil satu).
-- `tombol.dataset.kategori` — membaca atribut `data-kategori` dari tombol yang diklik.
-- `daftarUmkm.filter(...)` — membuat array baru berisi item yang kategorinya cocok.
-
-**Cek hasil:** klik tombol "Kuliner" hanya menampilkan UMKM kategori Kuliner; klik "Semua" menampilkan semua lagi.
-
-### Langkah 6 — Menambahkan validasi form kontak
-
-Di `app.js`, tambahkan di baris paling bawah:
-
-```javascript
-const formKontak = document.querySelector("#kontak form");
-
-formKontak.addEventListener("submit", function (event) {
-  event.preventDefault();
-
-  const nama = document.querySelector("#nama").value;
-  const pesan = document.querySelector("#pesan").value;
-
-  if (nama.trim() === "" || pesan.trim() === "") {
-    alert("Nama dan pesan tidak boleh kosong!");
-    return;
-  }
-
-  console.log("Pesan terkirim:", { nama, pesan });
-  alert("Terima kasih, " + nama + "! Pesanmu sudah tercatat di console.");
-  formKontak.reset();
-});
-```
-
-Penjelasan:
-- `event.preventDefault()` — mencegah form reload halaman secara default saat submit (perilaku bawaan browser).
-- `.value` — membaca isi yang diketik pengguna di input/textarea.
-- `.trim()` — menghapus spasi kosong di awal/akhir teks, supaya input " " (cuma spasi) tetap terdeteksi kosong.
-- `formKontak.reset()` — mengosongkan kembali form setelah berhasil.
-
-**Cek hasil:** submit form kosong memunculkan peringatan "tidak boleh kosong". Submit form terisi memunculkan ucapan terima kasih dan data tercatat di Console.
+Soal paginasi (angka 1/2/3 di bawah kartu) — itu masih tampilan saja, belum difungsikan. Logikanya mirip dengan yang baru dipelajari (motong array, render ulang), boleh dicoba sendiri sebagai latihan tambahan kalau penasaran.
 
 ### Hasil akhir sesi ini
 
 Struktur folder:
 
 ```text
-website-umkm/
-├── index.html
-├── style.css
-├── app.js
-└── .gitignore
+pert3-code/
+├── README.md
+├── fundamental-javascript/
+│   ├── index.html
+│   ├── style.css
+│   ├── var.js
+│   ├── condition.js
+│   ├── loop.js
+│   ├── function.js
+│   ├── arrayobject.js
+│   ├── consolelog.js
+│   ├── inputoutput.js
+│   ├── dom.js
+│   └── event.js
+└── implementasi-umkm/
+    ├── index.html
+    ├── style.css
+    └── app.js
 ```
 
-Halaman kini interaktif: data UMKM dirender dari array JavaScript, ada filter kategori yang berfungsi, dan form kontak sudah tervalidasi sebelum "dikirim" (masih di Console — pengiriman ke database dipelajari pertemuan 4).
+Direktori UMKM di `implementasi-umkm/` sekarang beneran interaktif: kartu dirender dari array JavaScript, filter kategori dan pencarian nama sama-sama jalan (bisa dikombinasikan), dan form kontak sudah tervalidasi sebelum "dikirim" (masih di Console — pengiriman ke database dipelajari pertemuan 4).
 
 ## Catatan AI
 
@@ -382,7 +369,7 @@ Contoh prompt yang baik: "Jelaskan perbedaan `forEach` dan `filter` di JavaScrip
 
 ## Latihan mandiri
 
-Tambahkan satu data UMKM baru pada array `daftarUmkm` dengan kategori "Kerajinan", lalu tambahkan satu tombol filter baru untuk kategori tersebut (kalau belum ada) dan pastikan filternya berfungsi.
+Tambahkan satu data UMKM baru di `daftarUmkm` (`implementasi-umkm/app.js`) dengan kategori bebas, lalu pastikan dia ikut muncul/hilang dengan benar saat dropdown kategori dan kotak pencarian dicoba.
 
 ## Rangkuman
 
@@ -402,4 +389,5 @@ JavaScript menghidupkan halaman lewat variabel, kondisi, loop, function, array/o
 
 ## Isi folder
 
-- Belum ada kode — akan ditambahkan menjelang pertemuan 3, melanjutkan dari `pert2-code`.
+- `fundamental-javascript/` — 9 file JS latihan konsep dasar, satu file satu topik, dipelajari duluan sebelum lanjut ke bawah. Mau ngetik dari nol tahu urutannya persis gimana? Ada `README.md` di dalam folder itu sendiri, isinya 13 langkah build-from-scratch lengkap sama daftar isi.
+- `implementasi-umkm/` — lanjutan `pert2-code`, sekarang punya `app.js` yang bikin direktori UMKM-nya beneran jalan (render dari array, filter kategori + pencarian, validasi form). Ada juga `README.md` di dalamnya, isinya panduan build-from-scratch mulai dari file pertemuan 2 sampai jadi interaktif.

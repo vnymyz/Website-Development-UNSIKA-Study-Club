@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Latihan Fundamental JavaScript</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Latihan Fundamental JavaScript</h1>
+      <p>
+        Satu section = satu konsep. Buka <strong>Inspect (F12) &gt; Console</strong>
+        sebelum mulai — sebagian besar hasilnya muncul di sana, bukan cuma di halaman.
+        Coba ganti-ganti nilai di tiap file <code>.js</code>, simpan, lalu refresh
+        buat lihat efeknya sendiri.
+      </p>
+    </header>
+
+    <main>
+      <!-- 1. Variabel & tipe data -->
+      <section id="demo-var">
+        <h2>1. Variabel &amp; Tipe Data — <code>var.js</code></h2>
+        <p class="keterangan"><code>let</code> vs <code>const</code>, dan empat tipe data dasar.</p>
+        <p id="hasil-var" class="output"></p>
+      </section>
+
+      <!-- 2. Kondisi -->
+      <section id="demo-condition">
+        <h2>2. Kondisi (if/else) — <code>condition.js</code></h2>
+        <p class="keterangan">Cek stok barang: kalau lebih dari 0, tersedia; kalau tidak, habis.</p>
+        <p id="hasil-condition" class="output"></p>
+      </section>
+
+      <!-- 3. Loop -->
+      <section id="demo-loop">
+        <h2>3. Perulangan (for) — <code>loop.js</code></h2>
+        <p class="keterangan">Mencetak angka 1 sampai 5 tanpa menulis <code>console.log</code> lima kali.</p>
+        <p id="hasil-loop" class="output"></p>
+      </section>
+
+      <!-- 4. Function -->
+      <section id="demo-function">
+        <h2>4. Function — <code>function.js</code></h2>
+        <p class="keterangan"><code>formatRupiah(angka)</code>: menerima angka, mengembalikan teks berformat.</p>
+        <p id="hasil-function" class="output"></p>
+      </section>
+
+      <!-- 5. Array & Object -->
+      <section id="demo-arrayobject">
+        <h2>5. Array &amp; Object — <code>arrayobject.js</code></h2>
+        <p class="keterangan">Array of object: beberapa produk, tiap produk punya nama dan harga.</p>
+        <p id="hasil-arrayobject" class="output"></p>
+      </section>
+
+      <!-- 6. Console log -->
+      <section id="demo-consolelog">
+        <h2>6. Console Log — <code>consolelog.js</code></h2>
+        <p class="keterangan">
+          Bagian ini <strong>tidak nulis apa-apa ke halaman</strong> — semua hasilnya
+          cuma muncul di tab Console. Buka Console sekarang buat lihat.
+        </p>
+      </section>
+
+      <!-- 7. Input & Output -->
+      <section id="demo-inputoutput">
+        <h2>7. Input &amp; Output — <code>inputoutput.js</code></h2>
+        <p class="keterangan">Ketik nama, klik tombol, lihat hasilnya ditulis ke halaman.</p>
+        <input type="text" id="input-nama" placeholder="Ketik nama kamu..." />
+        <button id="tombol-sapa">Sapa Aku</button>
+        <p id="hasil-inputoutput" class="output"></p>
+      </section>
+
+      <!-- 8. DOM -->
+      <section id="demo-dom">
+        <h2>8. DOM — <code>dom.js</code></h2>
+        <p class="keterangan">
+          <code>querySelector</code>, <code>.textContent</code>, dan <code>.style</code>
+          dipakai buat ubah teks dan warna paragraf di bawah ini — otomatis begitu
+          halaman dimuat, tanpa diklik.
+        </p>
+        <p id="target-dom" class="output">Teks ini akan diubah oleh dom.js</p>
+      </section>
+
+      <!-- 9. Event -->
+      <section id="demo-event">
+        <h2>9. Event — <code>event.js</code></h2>
+        <p class="keterangan"><code>addEventListener("click", ...)</code> — klik tombolnya.</p>
+        <button id="tombol-event">Klik Aku</button>
+        <p id="hasil-event" class="output"></p>
+      </section>
+    </main>
+
+    <footer>
+      <p>
+        Detail penjelasan tiap konsep ada di <code>README.md</code> pertemuan ini.
+        Sudah selesai semua? Lanjut ke folder <code>implementasi-umkm/</code>.
+      </p>
+    </footer>
+
+    <!-- Semua file dimuat sekaligus, satu per konsep, urut sesuai section di atas -->
+    <script src="var.js"></script>
+    <script src="condition.js"></script>
+    <script src="loop.js"></script>
+    <script src="function.js"></script>
+    <script src="arrayobject.js"></script>
+    <script src="consolelog.js"></script>
+    <script src="inputoutput.js"></script>
+    <script src="dom.js"></script>
+    <script src="event.js"></script>
+  </body>
+</html>
