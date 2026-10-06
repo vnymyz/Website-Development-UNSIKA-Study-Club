@@ -1,28 +1,31 @@
-# Pertemuan 4 — Database & Supabase (Create + Read)
+# Pertemuan 4 — Database & Supabase (Login, Read, Create)
 
-> Kode untuk sesi ini belum dibuat — folder ini baru berisi materi. File kode akan ditambahkan menjelang/pada pertemuan 4, mengikuti pola `pert1-code`.
+> Kode lengkap ada di `implementasi-supabase/` (contoh jadi, key dummy) dan `mulai-dari-kosong/` (folder kosong untuk dikerjakan ulang). Panduan step-by-step ada di [`implementasi-supabase/README.md`](implementasi-supabase/README.md).
 
 **Durasi:** 19.30–21.00 WIB
 **Tools:** VS Code, Live Server, Supabase
-**Output:** Peserta dapat membuat tabel di Supabase dan menghubungkan aplikasi untuk menyimpan (Create) serta menampilkan (Read) data sungguhan.
+**Output:** Peserta dapat membuat tabel di Supabase, menampilkan data UMKM dari database (Read), membuat login username sederhana, dan menambah data lewat dashboard (Create).
 
 ## Tujuan belajar
 
 - Memahami kenapa data perlu disimpan di database, bukan hanya di array JavaScript.
 - Memahami konsep tabel, baris, kolom, dan primary key.
-- Memahami apa itu Supabase dan bedanya API key `anon` vs `service_role`.
-- Membuat tabel di Supabase lewat Table Editor.
-- Menghubungkan halaman web ke Supabase untuk insert dan select data.
+- Memahami apa itu Supabase dan bedanya Publishable key vs Secret key.
+- Membuat tabel di Supabase lewat SQL Editor.
+- Menampilkan data dari Supabase ke Direktori UMKM (`select`).
+- Membuat login username sederhana dan halaman dashboard yang dijaga.
+- Menambah data UMKM lewat form di dashboard (`insert`).
 
 ## Rundown
 
 | Waktu | Aktivitas |
 |---|---|
 | 19.30–19.40 | Pembukaan, ice breaking: "pernah nggak isi form panjang terus HP restart dan datanya hilang?" |
-| 19.40–19.55 | Teori: kenapa butuh database, tabel, baris, kolom |
-| 19.55–20.10 | Teori: Postgres, Supabase, API key |
-| 20.10–20.30 | Hands-on: membuat project dan tabel di Supabase |
-| 20.30–20.55 | Hands-on: menghubungkan halaman untuk insert dan select data |
+| 19.40–20.00 | Teori ringkas: kenapa butuh database, tabel/baris/kolom, Supabase, key, RLS |
+| 20.00–20.15 | Hands-on: buat project dan tabel di Supabase (script SQL) |
+| 20.15–20.30 | Hands-on: Direktori UMKM mengambil data dari Supabase (Read) |
+| 20.30–20.45 | Hands-on: halaman login username + navbar |
+| 20.45–20.55 | Hands-on: dashboard + tambah UMKM (Create) |
 | 20.55–21.00 | Rangkuman dan pengantar kuis 4 |
 
 ## Teori
@@ -89,226 +92,108 @@ Browser (JavaScript) <--- kirim balik data ----------------------  Supabase (Pos
 
 > Slide visual: diagram di atas dengan logo Supabase di tengah sebagai jembatan antara Browser dan Postgres.
 
-### API Key: anon vs service_role
+### API Key: Publishable vs Secret
 
-Setiap project Supabase punya dua kunci akses:
+Setiap project Supabase punya dua jenis kunci akses:
 
 | Key | Kegunaan | Boleh dipakai di frontend? |
 |---|---|---|
-| `anon` (public) | Akses terbatas, dipakai di kode yang jalan di browser pengguna | **Ya**, aman untuk dilihat siapa saja |
-| `service_role` | Akses penuh tanpa batasan apa pun, seperti "kunci master" | **Tidak pernah** — kalau bocor, siapa pun bisa membaca/menghapus semua data |
+| **Publishable key** (`sb_publishable_...`) | Akses terbatas, dipakai di kode yang jalan di browser pengguna | **Ya**, aman dilihat siapa saja |
+| **Secret key** (`sb_secret_...`) | Akses penuh tanpa batasan apa pun, seperti "kunci master" | **Tidak pernah** — kalau bocor, siapa pun bisa membaca/menghapus semua data |
 
-Analogi: `anon key` seperti kartu akses karyawan biasa (bisa masuk lobi, ruang kerja); `service_role key` seperti kartu akses ruang server pusat — kalau dipegang orang yang salah, seluruh sistem bisa dibobol.
+> Di tutorial lama, Publishable key disebut **anon key** dan Secret key disebut **service_role key**. Fungsinya sama, cuma namanya diganti Supabase. Kalau kamu menemukan nama lama di tutorial lain, anggap itu pasangannya.
 
-Untuk kelas ini, kita **hanya memakai `anon key`** di kode frontend, dan tidak pernah menyentuh `service_role key`.
+Analogi: Publishable key seperti kartu akses karyawan biasa (bisa masuk lobi, ruang kerja); Secret key seperti kartu akses ruang server pusat — kalau dipegang orang yang salah, seluruh sistem bisa dibobol.
+
+Untuk kelas ini, kita **hanya memakai Publishable key** di kode frontend, dan tidak pernah menyentuh Secret key.
+
+### Row Level Security (RLS) dan Policy
+
+Publishable key itu publik — siapa pun bisa melihatnya di kode website. Lalu apa yang mencegah orang sembarangan mengacak-acak data? Jawabannya **RLS**.
+
+- **RLS aktif** artinya tabel "terkunci": semua akses ditolak.
+
+- **Policy** adalah aturan yang membuka kunci itu sebagian, misalnya "boleh membaca" atau "boleh menambah".
+
+- Di tabel `umkm` hari ini, kita buat dua policy: boleh **select** (membaca) dan boleh **insert** (menambah). Tidak ada policy edit atau hapus, jadi dua aksi itu otomatis ditolak.
+
+Kalau tabel dikunci tapi lupa membuat policy baca, hasilnya data kosong **tanpa pesan error**. Ini jebakan yang sering bikin bingung.
+
+### Login Sederhana: Username dan `localStorage`
+
+Hari ini loginnya sengaja dibuat paling sederhana: cukup isi username, tanpa password.
+
+- Username disimpan di **`localStorage`** — memori kecil di browser yang datanya tetap ada walau halaman di-refresh atau ditutup.
+
+- Halaman dashboard mengecek: ada username di `localStorage`? Kalau tidak ada, pengunjung langsung dipindah ke halaman login.
+
+- **Ini bukan keamanan sungguhan.** Siapa pun bisa mengetik username apa saja, atau mengisi `localStorage` lewat Console browser. Fungsinya cuma menandai "sudah login" supaya kita bisa belajar alurnya: login, dashboard, logout.
+
+Login yang aman (dengan password dan verifikasi di server) memakai **Supabase Auth**, dipelajari di pertemuan berikutnya.
+
+### Async dan Await
+
+Mengambil data dari internet butuh waktu. JavaScript tidak mau menunggu diam-diam, jadi kita pakai `async` dan `await`:
+
+- `async function` — menandai function yang berisi proses yang butuh waktu.
+
+- `await` — "tunggu proses ini selesai dulu, baru lanjut ke baris berikutnya".
+
+- Supabase selalu membalas `{ data, error }`: kalau berhasil `data` terisi, kalau gagal `error` terisi. Selalu cek `error` dulu.
 
 ## Hands-on: Langkah demi Langkah
 
-### Langkah 1 — Membuat project Supabase
+Panduan lengkap (klik apa, file apa, kode lengkap, plus komentar penanda perubahan dari pertemuan 3) ada di **[`implementasi-supabase/README.md`](implementasi-supabase/README.md)**. Ringkasannya:
 
-1. Login ke [supabase.com](https://supabase.com/).
-2. Klik **New Project**.
-3. Isi nama project, misalnya `website-umkm`, dan buat password database (simpan baik-baik, jangan share ke orang lain).
-4. Pilih region terdekat (misalnya Singapore), klik **Create new project**.
-5. Tunggu 1–2 menit sampai status project berubah jadi aktif.
+**Bagian A — Setup Supabase (di browser)**
 
-**Cek hasil:** dashboard project Supabase terbuka, ada menu sidebar Table Editor, Authentication, SQL Editor, dsb.
+1. Buat akun Supabase.
 
-### Langkah 2 — Membuat tabel `umkm`
+2. Buat project `website-umkm`.
 
-1. Di sidebar kiri, klik **Table Editor**.
-2. Klik **New table**.
-3. Nama tabel: `umkm`.
-4. Biarkan opsi "Enable Row Level Security" **tetap aktif** (default) — nanti diatur lebih lanjut di pertemuan 5. Untuk sementara, kita akan buat policy sederhana di Langkah 3 supaya latihan hari ini tetap bisa jalan.
-5. Tambahkan kolom (klik **+ Add column** untuk tiap baris):
+3. Buat tabel `umkm` + isi 6 data awal: paste satu script SQL di **SQL Editor**, klik Run.
 
-   | Nama kolom | Tipe |
-   |---|---|
-   | `nama` | `text` |
-   | `kategori` | `text` |
-   | `alamat` | `text` |
+4. Cek tabel di **Table Editor**.
 
-   (Kolom `id` dan `created_at` sudah otomatis dibuat Supabase.)
-6. Klik **Save**.
+5. Ambil **Project URL** dan **Publishable key**.
 
-**Cek hasil:** tabel `umkm` muncul di daftar Table Editor dengan 0 baris, kolom sesuai yang dibuat.
+**Bagian B — Kode (di folder `mulai-dari-kosong/`)**
 
-### Langkah 3 — Mengizinkan akses baca dan tulis (policy dasar)
+6. Siapkan folder `css/` dan `js/`, salin `index.html` dan `style.css` dari pertemuan 3.
 
-Supabase mengaktifkan **Row Level Security (RLS)** secara default, artinya tanpa aturan tambahan, tabel akan **menolak semua akses** dari `anon key`. Untuk latihan hari ini, kita buat policy sederhana yang mengizinkan semua orang membaca dan menambah data (aturan yang lebih ketat dipelajari pertemuan 5).
+7. Buat `js/common.js` (koneksi Supabase, login username, navbar).
 
-1. Di halaman tabel `umkm`, klik tab **Policies** (atau lewat menu **Authentication > Policies**).
-2. Klik **New Policy** untuk tabel `umkm`, pilih template **"Enable read access for all users"**, simpan.
-3. Klik **New Policy** lagi, pilih template **"Enable insert access for all users"**, simpan.
+8. Ubah `index.html`, tambah blok CSS navbar, buat `js/app.js` -> isi URL + key -> **Read jalan** (titik berhenti 1).
 
-**Cek hasil:** tabel `umkm` punya 2 policy: satu untuk `SELECT`, satu untuk `INSERT`.
+9. Buat halaman login (`login.html`, `js/login.js`) dan dashboard (`dashboard.html`, `js/dashboard.js`, `css/dashboard.css`) -> **login + Create jalan** (titik berhenti 2).
 
-**Kalau error:** kalau lupa langkah ini, nanti kode JavaScript akan mengembalikan data kosong atau error "row-level security policy" meski tidak ada kesalahan penulisan kode.
+10. Tes alur lengkap, lalu commit.
 
-### Langkah 4 — Mengisi data lewat Table Editor
-
-1. Di tab **Table Editor**, klik **Insert > Insert row**.
-2. Isi `nama`, `kategori`, `alamat` untuk 2–3 UMKM (boleh pakai data yang sama dari pertemuan sebelumnya).
-3. Klik **Save**.
-
-**Cek hasil:** baris baru muncul di tabel dengan `id` otomatis terisi (1, 2, dst).
-
-### Langkah 5 — Mengambil Project URL dan anon key
-
-1. Klik ikon gerigi (**Project Settings**) di sidebar, pilih **API**.
-2. Salin nilai **Project URL** dan **anon public** key.
-
-**Cek hasil:** dua nilai ini siap ditempel ke kode JavaScript pada langkah berikutnya.
-
-### Langkah 6 — Memasang Supabase JS Client lewat CDN
-
-Di `index.html`, tambahkan sebelum `<script src="app.js"></script>`:
-
-```html
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-```
-
-Di `app.js`, tambahkan paling atas (ganti dengan nilai milikmu sendiri):
-
-```javascript
-const SUPABASE_URL = "https://xxxxxxxxxxxx.supabase.co";
-const SUPABASE_ANON_KEY = "isi-anon-key-kamu-di-sini";
-
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-```
-
-Penjelasan:
-- `supabase.createClient(url, key)` — membuat koneksi ke project Supabase kamu, hasilnya disimpan di variabel `supabaseClient` untuk dipakai berkali-kali.
-
-**Cek hasil:** tidak ada error merah di Console setelah refresh halaman.
-
-**Kalau error:** kalau muncul `supabase is not defined`, cek urutan `<script>` — file CDN Supabase harus dimuat **sebelum** `app.js`.
-
-### Langkah 7 — Mengambil data dari Supabase (Read/Select)
-
-Ganti bagian `daftarUmkm` (array manual) dan pemanggilan `renderUmkm(daftarUmkm)` di `app.js` menjadi:
-
-```javascript
-async function ambilDanTampilkanUmkm() {
-  const { data, error } = await supabaseClient
-    .from("umkm")
-    .select("*")
-    .order("id", { ascending: true });
-
-  if (error) {
-    console.error("Gagal mengambil data:", error);
-    return;
-  }
-
-  renderUmkm(data);
-}
-
-ambilDanTampilkanUmkm();
-```
-
-Penjelasan:
-- `async function` — menandai function ini berisi proses yang butuh waktu (mengambil data lewat internet), sehingga perlu `await` di dalamnya.
-- `await` — "tunggu dulu proses ini selesai sebelum lanjut ke baris berikutnya".
-- `.from("umkm")` — pilih tabel `umkm`.
-- `.select("*")` — ambil semua kolom.
-- `.order("id", { ascending: true })` — urutkan berdasarkan `id` dari kecil ke besar.
-- `{ data, error }` — Supabase selalu mengembalikan dua kemungkinan: `data` (berhasil) atau `error` (gagal). Selalu dicek keduanya.
-
-**Cek hasil:** data UMKM yang diisi manual di Langkah 4 kini tampil di halaman web, diambil langsung dari Supabase — bukan dari array JavaScript lagi.
-
-### Langkah 8 — Menyimpan data dari form (Create/Insert)
-
-Ganti isi function `formKontak.addEventListener("submit", ...)` — kali ini kita ubah form kontak menjadi form tambah UMKM. Di `index.html`, ganti form di section kontak:
-
-```html
-<section id="kontak">
-  <h2>Tambah UMKM Baru</h2>
-  <form id="form-umkm">
-    <label for="nama">Nama Usaha</label>
-    <input type="text" id="nama" name="nama" placeholder="Nama usaha">
-
-    <label for="kategori">Kategori</label>
-    <input type="text" id="kategori" name="kategori" placeholder="Kuliner / Fashion / Kerajinan">
-
-    <label for="alamat">Alamat</label>
-    <input type="text" id="alamat" name="alamat" placeholder="Alamat usaha">
-
-    <button type="submit">Simpan</button>
-  </form>
-</section>
-```
-
-Di `app.js`, ganti bagian validasi form lama dengan:
-
-```javascript
-const formUmkm = document.querySelector("#form-umkm");
-
-formUmkm.addEventListener("submit", async function (event) {
-  event.preventDefault();
-
-  const nama = document.querySelector("#nama").value.trim();
-  const kategori = document.querySelector("#kategori").value.trim();
-  const alamat = document.querySelector("#alamat").value.trim();
-
-  if (nama === "" || kategori === "" || alamat === "") {
-    alert("Semua kolom wajib diisi!");
-    return;
-  }
-
-  const { error } = await supabaseClient
-    .from("umkm")
-    .insert([{ nama: nama, kategori: kategori, alamat: alamat }]);
-
-  if (error) {
-    console.error("Gagal menyimpan data:", error);
-    alert("Gagal menyimpan data. Cek Console untuk detail.");
-    return;
-  }
-
-  alert("UMKM berhasil ditambahkan!");
-  formUmkm.reset();
-  ambilDanTampilkanUmkm();
-});
-```
-
-Penjelasan:
-- `.insert([{ ... }])` — Supabase menerima **array of object**, meski cuma menyimpan satu baris (tanda kurung siku `[ ]` tetap wajib).
-- Setelah berhasil insert, kita panggil lagi `ambilDanTampilkanUmkm()` supaya kartu baru langsung muncul tanpa perlu refresh manual.
-
-**Cek hasil:** isi form, klik Simpan, muncul alert sukses, dan kartu UMKM baru langsung muncul di halaman.
-
-### Langkah 9 — Membuktikan data benar-benar tersimpan
-
-1. Refresh halaman browser secara manual (`F5`).
-2. Cek juga di Supabase Table Editor.
-
-**Cek hasil:** data yang tadi ditambahkan lewat form **masih ada** setelah refresh, dan baris barunya juga muncul di Table Editor Supabase — bukti data tersimpan permanen di database, bukan di memori browser.
-
-### Langkah 10 — Commit progres
-
-```bash
-git add .
-git commit -m "Hubungkan aplikasi ke Supabase untuk create dan read data UMKM"
-git push
-```
-
-**Cek hasil:** commit baru muncul di riwayat repository GitHub.
-
-**Kalau error:** jangan pernah commit `service_role key`. `anon key` aman untuk ikut ter-commit karena memang didesain untuk publik, tapi tetap hindari kebiasaan menaruh key langsung di kode — di pertemuan 6 kita rapikan ini dengan environment variable.
+Hanya tiga hal baru yang dikerjakan: **login, Read, Create**. Edit dan Hapus dikerjakan di pertemuan 5. Section Kontak tidak diubah.
 
 ### Hasil akhir sesi ini
 
-Struktur folder:
-
 ```text
-website-umkm/
-├── index.html
-├── style.css
-├── app.js
-└── .gitignore
+pert4-code/
+├── README.md                      <- teori (file ini)
+├── implementasi-supabase/         <- hasil jadi + panduan step-by-step
+│   ├── README.md
+│   ├── supabase-setup.sql
+│   ├── index.html
+│   ├── login.html
+│   ├── dashboard.html
+│   ├── css/
+│   │   ├── style.css
+│   │   └── dashboard.css
+│   └── js/
+│       ├── common.js
+│       ├── app.js
+│       ├── login.js
+│       └── dashboard.js
+└── mulai-dari-kosong/             <- folder kosong buat dikerjakan ulang
 ```
 
-Aplikasi kini terhubung ke database Postgres sungguhan lewat Supabase. Form menyimpan data baru (Create), dan halaman menampilkan data dari database (Read). Data bertahan meski halaman di-refresh atau dibuka di komputer lain.
+Website UMKM kini terhubung ke database Postgres sungguhan lewat Supabase. Direktori menampilkan data dari database, pengunjung bisa login dengan username, dan dari dashboard bisa menambah UMKM baru. Data bertahan meski halaman di-refresh atau dibuka di komputer lain.
 
 ## Catatan AI
 
@@ -316,11 +201,11 @@ Contoh prompt yang baik: "Jelaskan kenapa Supabase mengembalikan `{ data, error 
 
 ## Latihan mandiri
 
-Tambahkan kolom baru `nomor_telepon` (tipe `text`) pada tabel `umkm` lewat Table Editor, lalu tambahkan input untuk kolom itu di form dan pastikan data tersimpan serta tampil di kartu UMKM.
+Tambahkan kategori baru **Jasa**: tambah `<option>Jasa</option>` di dropdown form `dashboard.html` dan di dropdown filter `index.html`, lalu tambah satu UMKM kategori Jasa lewat dashboard dan coba filter-nya di halaman utama.
 
 ## Rangkuman
 
-Database menyimpan data secara permanen dalam tabel berisi baris dan kolom, dengan `id` sebagai primary key. Supabase menyediakan Postgres siap pakai lewat JavaScript client, diakses memakai `anon key` dari frontend. Hari ini kita berhasil Create dan Read data sungguhan. Minggu depan kita lengkapi dengan Update, Delete, relasi antar tabel, dan sistem login.
+Database menyimpan data secara permanen dalam tabel berisi baris dan kolom, dengan `id` sebagai primary key. Supabase menyediakan Postgres siap pakai lewat JavaScript client, diakses dari frontend memakai Publishable key, dan dilindungi aturan RLS. Hari ini Direktori UMKM sudah membaca data dari database (Read), ada login username sederhana dengan dashboard yang dijaga, dan data baru bisa ditambah lewat form (Create). Minggu depan kita lengkapi dengan Edit dan Hapus, lalu mengganti login username dengan login asli memakai Supabase Auth.
 
 ## Istilah penting
 
@@ -331,11 +216,15 @@ Database menyimpan data secara permanen dalam tabel berisi baris dan kolom, deng
 | Primary key | Kolom unik yang membedakan satu baris dengan baris lain |
 | Postgres | Jenis database yang dipakai Supabase |
 | Supabase | Layanan yang menyediakan Postgres, API, dan Auth siap pakai |
-| anon key | Kunci akses publik yang aman dipakai di frontend |
-| service_role key | Kunci akses penuh, tidak boleh pernah dipakai di frontend |
+| Publishable key | Kunci akses publik yang aman dipakai di frontend (dulu disebut anon key) |
+| Secret key | Kunci akses penuh, tidak boleh pernah dipakai di frontend (dulu disebut service_role key) |
 | Row Level Security (RLS) | Aturan yang membatasi siapa boleh mengakses baris data tertentu |
+| Policy | Aturan di bawah RLS, misalnya "boleh membaca" atau "boleh menambah" |
+| localStorage | Memori kecil di browser, datanya tetap ada setelah refresh |
+| Login username | Login sederhana tanpa password, hanya penanda "sudah login", bukan keamanan sungguhan |
 | async/await | Cara JavaScript menunggu proses yang butuh waktu, seperti mengambil data dari internet |
 
 ## Isi folder
 
-- Belum ada kode — akan ditambahkan menjelang pertemuan 4, melanjutkan dari `pert3-code`.
+- `implementasi-supabase/` — kode lengkap (key dummy) + panduan step-by-step `README.md` + `supabase-setup.sql`.
+- `mulai-dari-kosong/` — folder kosong untuk mengerjakan panduan dari awal.

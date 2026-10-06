@@ -36,7 +36,7 @@ Setelah menyelesaikan program ini, peserta diharapkan mampu:
 | 1 | Cara kerja web, setup VS Code, HTML semantik | Halaman HTML multi-section yang tampil di browser |
 | 2 | CSS, box model, Flexbox, Grid, responsive, Git & GitHub | Halaman responsif, sudah ter-commit dan push ke repository |
 | 3 | JavaScript dasar dan DOM | Halaman interaktif: filter, form, dan render data dari array |
-| 4 | Konsep database dan Supabase (Create + Read) | Data dari form tersimpan di database dan tampil kembali setelah refresh |
+| 4 | Konsep database dan Supabase (Login, Read, Create) | Direktori UMKM membaca data dari database, login username sederhana, dan UMKM baru bisa ditambah lewat dashboard |
 | 5 | Update, Delete, relasi tabel, dan autentikasi | Aplikasi CRUD penuh dengan sistem login |
 | 6 | Deploy ke Vercel dan GitHub dasar | Aplikasi live di URL publik, repository rapi |
 
@@ -59,10 +59,10 @@ Studi kasus dipakai konsisten dari pertemuan 1 sampai 6: **katalog UMKM Karawang
 - **Belajar apa:** variabel (`let`/`const`), tipe data, kondisi `if/else`, perulangan `for`, function, array dan object, DOM (`querySelector`, `textContent`, `style`), event (`click`, `submit`), merender list data ke HTML, validasi form.
 - **Outcome:** halaman jadi interaktif — daftar UMKM dirender dari array JavaScript (bukan HTML manual lagi), ada tombol filter kategori yang berfungsi, dan form kontak tervalidasi sebelum "terkirim" (masih tersimpan sementara, belum ke database).
 
-### Pertemuan 4 — Database & Supabase (Create + Read)
+### Pertemuan 4 — Database & Supabase (Login, Read, Create)
 
-- **Belajar apa:** kenapa data butuh database (bukan cuma array), konsep tabel/baris/kolom/primary key, apa itu Postgres dan Supabase, perbedaan `anon key` vs `service_role key`, memasang Supabase JS Client, query `select()` dan `insert()`, Row Level Security dasar (policy baca/tulis).
-- **Outcome:** data UMKM tidak lagi disimpan di array — form menyimpan data baru ke database Postgres sungguhan (Create), dan halaman menampilkan data dari database (Read). Data tetap ada meski halaman di-refresh.
+- **Belajar apa:** kenapa data butuh database (bukan cuma array), konsep tabel/baris/kolom/primary key, apa itu Postgres dan Supabase, perbedaan Publishable key (dulu disebut `anon key`) vs Secret key (dulu `service_role key`), membuat tabel lewat SQL Editor, memasang Supabase JS Client, query `select()` dan `insert()`, Row Level Security dasar (policy baca/tambah), `async`/`await`, login username sederhana dengan `localStorage`.
+- **Outcome:** data UMKM tidak lagi disimpan di array — Direktori menampilkan data dari database Postgres sungguhan (Read, filter dan pencarian tetap jalan). Ada halaman login (username saja), dashboard yang dijaga login, dan form di dashboard untuk menambah UMKM baru (Create). Data tetap ada meski halaman di-refresh. Edit dan Hapus dikerjakan di pertemuan 5. Kode ada di `pert4-code/implementasi-supabase/` (hasil jadi) dan `pert4-code/mulai-dari-kosong/` (folder kosong untuk dikerjakan dari awal).
 
 ### Pertemuan 5 — Update, Delete, Relasi Tabel & Autentikasi
 
