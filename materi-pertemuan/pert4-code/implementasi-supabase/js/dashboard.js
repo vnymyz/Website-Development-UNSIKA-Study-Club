@@ -61,9 +61,10 @@ function mulaiDashboard() {
   });
 
   // ---------- Logout ----------
+  // [UBAH P4] Setelah logout kembali ke halaman utama (index.html)
   document.querySelector("#tombol-logout").addEventListener("click", () => {
     hapusUsername();
-    location.replace("login.html");
+    location.replace("index.html");
   });
 
   // ---------- Toast: pesan singkat yang hilang sendiri ----------
@@ -97,11 +98,11 @@ function mulaiDashboard() {
 
   async function muatTabel() {
     if (!konfigurasiSiap()) {
-      tubuhTabel.innerHTML = `<tr><td colspan="6" class="galat">Isi SUPABASE_URL dan SUPABASE_KEY dulu di js/common.js.</td></tr>`;
+      tubuhTabel.innerHTML = `<tr><td colspan="7" class="galat">Isi SUPABASE_URL dan SUPABASE_KEY dulu di js/common.js.</td></tr>`;
       return;
     }
 
-    tubuhTabel.innerHTML = `<tr><td colspan="6">Memuat data...</td></tr>`;
+    tubuhTabel.innerHTML = `<tr><td colspan="7">Memuat data...</td></tr>`;
 
     const { data, error } = await supabaseClient
       .from("umkm")
@@ -110,16 +111,18 @@ function mulaiDashboard() {
 
     if (error) {
       console.error("Gagal mengambil data:", error);
-      tubuhTabel.innerHTML = `<tr><td colspan="6" class="galat">Gagal mengambil data. Buka Console (F12).</td></tr>`;
+      tubuhTabel.innerHTML = `<tr><td colspan="7" class="galat">Gagal mengambil data. Buka Console (F12).</td></tr>`;
       return;
     }
 
     renderStatistik(data);
     jumlahUmkm.textContent = data.length + " usaha";
+    // urutan dimulai dari 0, jadi ditambah 1 supaya nomor tampil 1, 2, 3, ...
     tubuhTabel.innerHTML = data
       .map(
-        (umkm) => `
+        (umkm, urutan) => `
         <tr>
+          <td class="nomor">${urutan + 1}</td>
           <td><img class="foto-kecil" src="${escapeHtml(umkm.foto)}" alt="" loading="lazy" /></td>
           <td><strong>${escapeHtml(umkm.nama)}</strong><small>${escapeHtml(umkm.alamat)}</small></td>
           <td><span class="pil">${escapeHtml(umkm.kategori)}</span></td>

@@ -515,6 +515,15 @@ td.galat {
   color: #b3412e;
 }
 
+/* Kolom nomor urut: sempit, rata tengah */
+th.nomor,
+td.nomor {
+  width: 48px;
+  text-align: center;
+  color: var(--matcha-mid);
+  font-weight: 700;
+}
+
 td strong {
   display: block;
   color: var(--ink);
