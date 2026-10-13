@@ -1,0 +1,192 @@
+<!doctype html>
+<!-- [UBAH P5] Dashboard: ditambah Edit dan Hapus. Dulu hanya daftar dan tambah UMKM (pertemuan 4) -->
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard — Katalog UMKM Karawang</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/dashboard.css" />
+  </head>
+
+  <!-- class "belum-dicek" menyembunyikan halaman. dashboard.js menghapusnya setelah cek login lolos -->
+  <body class="belum-dicek">
+    <div class="layout">
+      <!-- ========== SIDEBAR ========== -->
+      <aside class="sidebar" id="sidebar">
+        <a class="sidebar-merek" href="index.html">
+          <i class="fa-solid fa-store" aria-hidden="true"></i> UMKM Karawang
+        </a>
+
+        <nav class="sidebar-menu" aria-label="Menu dashboard">
+          <!-- Dua tombol ini mengganti tampilan di sebelah kanan (lihat dashboard.js) -->
+          <button type="button" class="menu-item aktif" data-view="daftar">
+            <i class="fa-solid fa-table-list" aria-hidden="true"></i> Daftar
+            UMKM
+          </button>
+          <button type="button" class="menu-item" data-view="tambah">
+            <i class="fa-solid fa-plus" aria-hidden="true"></i> Tambah UMKM
+          </button>
+          <a class="menu-item" href="index.html">
+            <i class="fa-solid fa-house" aria-hidden="true"></i> Home
+          </a>
+        </nav>
+
+        <!-- Info user + Logout di bagian bawah sidebar -->
+        <div class="sidebar-user">
+          <div class="sidebar-profil">
+            <span class="avatar" id="avatar-user"></span>
+            <div>
+              <small>Masuk sebagai</small>
+              <strong id="nama-user"></strong>
+            </div>
+          </div>
+          <button type="button" id="tombol-logout" class="tombol-logout">
+            <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
+            Logout
+          </button>
+        </div>
+      </aside>
+
+      <!-- Lapisan gelap di belakang sidebar (hanya muncul di layar HP) -->
+      <div class="sidebar-lapisan" id="lapisan-sidebar"></div>
+
+      <!-- ========== KONTEN ========== -->
+      <div class="konten">
+        <div class="topbar">
+          <button
+            type="button"
+            id="tombol-menu"
+            class="tombol-menu"
+            aria-label="Buka menu"
+          >
+            <i class="fa-solid fa-bars" aria-hidden="true"></i>
+          </button>
+          <h1 id="judul-halaman">Daftar UMKM</h1>
+        </div>
+
+        <main class="dashboard">
+          <!-- Tampilan 1: ringkasan + tabel daftar UMKM (Read) -->
+          <section class="view" id="view-daftar">
+            <div class="statistik" id="statistik"></div>
+
+            <div class="kartu">
+              <div class="kartu-kepala">
+                <h2>Semua UMKM</h2>
+                <span class="pil" id="jumlah-umkm"></span>
+              </div>
+              <div class="tabel-bungkus">
+                <table>
+                  <thead>
+                    <tr>
+                      <th class="nomor">No</th>
+                      <th>Foto</th>
+                      <th>Usaha</th>
+                      <th>Kategori</th>
+                      <th>Jam buka</th>
+                      <th>WA</th>
+                      <th>Ditambah oleh</th>
+                      <!-- [BARU P5] Kolom tombol Edit dan Hapus -->
+                      <th>Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tubuh-tabel"></tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- Tampilan 2: form tambah UMKM (Create) dan edit UMKM (Update) -->
+          <section class="view" id="view-tambah" hidden>
+            <div class="kartu kartu-form">
+              <!-- [UBAH P5] Judul diberi id supaya bisa berganti "Tambah" / "Edit" lewat JavaScript -->
+              <h2 id="judul-form">Tambah UMKM baru</h2>
+              <p class="kartu-sub">
+                Data langsung tersimpan di Supabase dan tampil di halaman
+                Direktori.
+              </p>
+
+              <form id="form-umkm" class="form-terang form-grid">
+                <div class="kolom">
+                  <label for="nama">Nama usaha</label>
+                  <input type="text" id="nama" placeholder="Warung Bu Sari" />
+                </div>
+
+                <div class="kolom">
+                  <label for="kategori">Kategori</label>
+                  <select id="kategori">
+                    <option>Kuliner</option>
+                    <option>Fashion</option>
+                    <option>Kerajinan</option>
+                  </select>
+                </div>
+
+                <div class="kolom kolom-lebar">
+                  <label for="alamat">Alamat</label>
+                  <input
+                    type="text"
+                    id="alamat"
+                    placeholder="Jl. Merdeka No. 10, Karawang"
+                  />
+                </div>
+
+                <div class="kolom">
+                  <label for="jam">Jam buka</label>
+                  <input
+                    type="text"
+                    id="jam"
+                    placeholder="Buka 07.00 – 21.00"
+                  />
+                </div>
+
+                <div class="kolom">
+                  <label for="wa">Nomor WA</label>
+                  <input type="text" id="wa" placeholder="0812-3456-7890" />
+                </div>
+
+                <div class="kolom kolom-lebar">
+                  <label for="foto">Link foto (boleh dikosongkan)</label>
+                  <input type="text" id="foto" placeholder="https://..." />
+                </div>
+
+                <div class="form-aksi kolom-lebar">
+                  <!-- [UBAH P5] Diberi id, teksnya berubah jadi "Simpan perubahan" saat mengedit -->
+                  <button type="submit" id="tombol-simpan">Simpan</button>
+                  <button
+                    type="button"
+                    id="tombol-batal"
+                    class="tombol-sekunder"
+                  >
+                    Batal
+                  </button>
+                </div>
+              </form>
+
+              <p id="status-form" class="status" role="status"></p>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <!-- Pesan singkat di pojok kanan bawah (muncul sebentar setelah berhasil menyimpan) -->
+    <div id="toast" class="toast" role="status"></div>
+
+    <!-- Urutan wajib: library Supabase -> common.js -> dashboard.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/common.js"></script>
+    <script src="js/dashboard.js"></script>
+  </body>
+</html>

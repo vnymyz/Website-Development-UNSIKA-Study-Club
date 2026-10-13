@@ -8,9 +8,9 @@ Daftar kerjaan yang belum selesai per hari ini. Dicek dan diupdate tiap ada prog
 - [ ] Pertemuan 2 — kode (`style.css`, `.gitignore` di dalam proyek peserta, dst) belum dibuat. Materi (`README.md`) sudah lengkap.
 - [x] Pertemuan 3 — kode selesai: `pert3-code/fundamental-javascript/` (playground konsep dasar) + `pert3-code/implementasi-umkm/` (lanjutan pert2-code, `app.js` render+filter+validasi). Materi sudah lengkap.
 - [x] Pertemuan 4 — kode selesai: `pert4-code/implementasi-supabase/` (kode jadi, key dummy, panduan step-by-step) + `pert4-code/mulai-dari-kosong/` (folder kosong). Isi: Read dari Supabase, login username, dashboard, Create. Update/Delete sengaja belum ada (pertemuan 5). Belum diuji ke project Supabase asli — coba dulu pakai project sendiri sebelum kelas.
-- [ ] Pertemuan 5 — sesuaikan `pert5-code/README.md` dengan perubahan pertemuan 4 (login username sudah ada, Update/Delete di atas kode yang sama, ganti ke Supabase Auth + RLS ketat, istilah `anon key` -> Publishable key).
+- [x] Pertemuan 5 — kode selesai: `pert5-code/implementasi-auth-crud/` (kode jadi, key dummy, panduan step-by-step, `supabase-migrasi-p5.sql`, folder `bonus-relasi-kategori/`) + `pert5-code/mulai-dari-pertemuan-4/` (titik awal). Isi: Edit, Hapus, Supabase Auth (email + password), RLS pemilik data. Teori `pert5-code/README.md` ditulis ulang. Belum diuji ke project Supabase asli — coba dulu: matikan Confirm email, jalankan SQL migrasi, daftar, login, tambah, edit, hapus, lalu coba hapus data bawaan (harus ditolak) dan login akun kedua.
 - [ ] Cek `kuis-latihan-4.md` / `pilgan-4.md` (kalau sudah ada) terhadap isi pertemuan 4 yang baru.
-- [ ] Pertemuan 5 — kode (CRUD lengkap + auth) belum dibuat. Materi sudah lengkap.
+- [ ] Pertemuan 6 — `pert6-code/README.md` masih menyebut `SUPABASE_ANON_KEY` di `app.js` dan pemisahan konfigurasi lewat environment variable; sesuaikan dengan struktur baru (`js/common.js`, tanpa build step) dan istilah Publishable key.
 - [ ] Pertemuan 6 — kode (README proyek contoh, config deploy) belum dibuat. Materi sudah lengkap.
 
 > Pola: kode ditambahkan menjelang/pada tiap pertemuan berlangsung, bukan sekaligus di awal — supaya tetap relevan dengan progres kelas yang sesungguhnya.

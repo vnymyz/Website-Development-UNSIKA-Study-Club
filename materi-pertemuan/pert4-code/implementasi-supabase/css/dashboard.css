@@ -43,7 +43,9 @@ form.form-terang select {
   padding: 12px 14px;
   font-family: inherit;
   font-size: 0.95rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
 form.form-terang input::placeholder {
@@ -272,7 +274,9 @@ button.tombol-sekunder {
   text-align: left;
   text-decoration: none;
   cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
 }
 
 .menu-item i {
@@ -591,7 +595,9 @@ td small {
   opacity: 0;
   transform: translateY(12px);
   pointer-events: none;
-  transition: opacity 0.25s, transform 0.25s;
+  transition:
+    opacity 0.25s,
+    transform 0.25s;
   z-index: 50;
 }
 

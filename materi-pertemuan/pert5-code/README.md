@@ -1,85 +1,194 @@
-# Pertemuan 5 — Update, Delete, Relasi Tabel & Autentikasi
+# Pertemuan 5 — Edit, Hapus, Login Asli, dan Hak Akses
 
-> Kode untuk sesi ini belum dibuat — folder ini baru berisi materi. File kode akan ditambahkan menjelang/pada pertemuan 5, mengikuti pola `pert1-code`.
+> Kode lengkap ada di `implementasi-auth-crud/` (hasil jadi, key dummy) dan `mulai-dari-pertemuan-4/` (titik awal, salinan hasil pertemuan 4). Panduan step-by-step ada di [`implementasi-auth-crud/README.md`](implementasi-auth-crud/README.md).
 
 **Durasi:** 19.30–21.00 WIB
 **Tools:** VS Code, Live Server, Supabase
-**Output:** Peserta dapat melengkapi CRUD (Update, Delete), membuat relasi antar tabel, serta menambahkan sistem login dengan Supabase Auth dan Row Level Security dasar.
+**Output:** Peserta dapat melengkapi CRUD (Update dan Delete), mengganti login username dengan Supabase Auth (email + password), dan membatasi hak akses lewat Row Level Security, sehingga hanya pemilik data yang boleh mengubah atau menghapus datanya.
 
 ## Tujuan belajar
 
-- Melengkapi CRUD dengan fitur Update dan Delete.
-- Menambahkan pencarian dan pengurutan data.
-- Memahami relasi antar tabel lewat foreign key.
+- Melengkapi CRUD dengan fitur Update dan Delete di dashboard.
+
+- Memahami kenapa `.eq()` wajib saat update dan delete.
+
 - Memahami perbedaan autentikasi dan otorisasi.
-- Membuat sistem login/register dengan Supabase Auth.
-- Memahami dan menerapkan Row Level Security (RLS) dasar.
+
+- Membuat daftar, login, dan logout dengan Supabase Auth.
+
+- Membatasi hak akses data dengan Row Level Security (RLS) dan `auth.uid()`.
+
+- Memahami relasi antar tabel lewat foreign key (praktiknya sebagai bonus).
 
 ## Rundown
 
 | Waktu | Aktivitas |
 |---|---|
-| 19.30–19.40 | Pembukaan, ice breoking: "kalau aplikasi tidak ada tombol edit/hapus, gimana rasanya?" |
-| 19.40–19.50 | Teori: Update, Delete, pentingnya filter `.eq()` |
-| 19.50–20.05 | Hands-on: tombol Edit dan Hapus + pencarian |
-| 20.05–20.15 | Teori: relasi antar tabel (foreign key) |
-| 20.15–20.25 | Hands-on: membuat tabel kategori dan query join |
-| 20.25–20.35 | Teori: autentikasi, otorisasi, Row Level Security |
-| 20.35–20.55 | Hands-on: login, register, dan RLS |
+| 19.30–19.40 | Pembukaan: login username pertemuan 4 itu sebenarnya "hiasan". Kenapa? |
+| 19.40–19.55 | Teori: Update, Delete, pentingnya `.eq()` |
+| 19.55–20.15 | Hands-on: tombol Edit dan Hapus di dashboard |
+| 20.15–20.30 | Teori: autentikasi vs otorisasi, session, RLS |
+| 20.30–20.50 | Hands-on: Supabase Auth + RLS pemilik data |
+| 20.50–20.55 | Teori singkat: relasi antar tabel (foreign key); praktiknya bonus |
 | 20.55–21.00 | Rangkuman dan pengantar kuis 5 |
 
 ## Teori
 
-### Melengkapi CRUD: Update dan Delete
+### Review: apa yang sudah ada, apa yang masih bolong
 
-CRUD adalah singkatan dari empat operasi dasar terhadap data:
+Di pertemuan 4 kita membuat Read, Create, dan login username. Sekarang kita tinjau yang masih kurang:
+
+| Hal | Kondisi pertemuan 4 | Masalahnya |
+|---|---|---|
+| Login | Username disimpan di `localStorage` | Siapa saja bisa mengetik username apa pun. Tidak ada password |
+| Tambah data | Policy `anon` boleh `insert` | Orang yang tahu URL + key bisa menambah data **tanpa lewat dashboard** |
+| Edit dan Hapus | Belum ada | CRUD belum lengkap |
+
+Login username itu cuma "tanda di tampilan". Yang menentukan siapa boleh melakukan apa di database adalah **aturan di Supabase (RLS)**, dan aturan itu belum mengenal siapa penggunanya. Hari ini kita perbaiki dua-duanya.
+
+### Melengkapi CRUD: Update dan Delete
 
 | Operasi | Kegunaan | Contoh di aplikasi kita |
 |---|---|---|
 | **C**reate | Menambah data baru | Form tambah UMKM (pertemuan 4) |
-| **R**ead | Membaca/menampilkan data | Menampilkan daftar UMKM (pertemuan 4) |
-| **U**pdate | Mengubah data yang sudah ada | Edit alamat UMKM yang salah ketik |
+| **R**ead | Membaca data | Tabel dan kartu UMKM (pertemuan 4) |
+| **U**pdate | Mengubah data yang sudah ada | Memperbaiki alamat yang salah ketik |
 | **D**elete | Menghapus data | Menghapus UMKM yang sudah tutup |
-
-Minggu lalu kita sudah membuat Create dan Read. Hari ini melengkapi dengan Update dan Delete.
 
 ### Kenapa `.eq()` sangat penting
 
-Saat mengubah atau menghapus data, kita **wajib** menentukan baris mana yang dimaksud — biasanya lewat `id`.
+Saat mengubah atau menghapus, kita **wajib** menyebut baris mana yang dimaksud, biasanya lewat `id`.
 
 ```javascript
 // BENAR: hanya mengubah baris dengan id = 3
 await supabaseClient.from("umkm").update({ nama: "Nama Baru" }).eq("id", 3);
 
-// SALAH: tanpa .eq(), berpotensi mengubah SEMUA baris di tabel
+// BERBAHAYA: tanpa .eq(), yang diubah SEMUA baris yang boleh disentuh
 await supabaseClient.from("umkm").update({ nama: "Nama Baru" });
 ```
 
-> Slide visual: ilustrasi dua skenario — satu map terhapus (benar) vs seluruh laci kosong (salah, tanpa filter).
+- `.eq("id", 3)` artinya "yang kolom `id`-nya sama dengan 3".
 
-Ini kesalahan paling umum dan paling berbahaya pada CRUD pemula: lupa `.eq()` saat update/delete bisa menghapus atau mengubah seluruh isi tabel dalam sekali klik.
+- Lupa `.eq()` pada `delete()` bisa menghapus seluruh isi tabel dalam sekali jalan. Ini kesalahan paling berbahaya pada CRUD pemula.
 
-### Pencarian dan pengurutan data
+- Biasakan: tulis `.eq()` **dulu**, baru isi datanya.
 
-Supabase menyediakan berbagai method untuk memfilter data, contohnya:
+### RLS menolak diam-diam: cek hasilnya
+
+Ada jebakan yang bikin bingung. Kalau RLS menolak sebuah `update()` atau `delete()`, Supabase **tidak mengembalikan error**. Dia cuma mengubah **nol baris**, dan kodenya terlihat sukses.
 
 ```javascript
-// Mencari nama yang mengandung kata tertentu (tidak peduli huruf besar/kecil)
-await supabaseClient.from("umkm").select("*").ilike("nama", `%${kataKunci}%`);
+const { data, error } = await supabaseClient
+  .from("umkm")
+  .delete()
+  .eq("id", 3)
+  .select();          // minta baris yang benar-benar terhapus dikembalikan
 
-// Mengurutkan data terbaru di atas
-await supabaseClient.from("umkm").select("*").order("created_at", { ascending: false });
+if (error) { /* gagal karena masalah teknis */ }
+if (data.length === 0) { /* tidak ada yang terhapus: ditolak aturan, atau id tidak ada */ }
 ```
 
-- `.ilike("nama", "%kopi%")` — mencari baris yang kolom `nama`-nya mengandung kata "kopi", huruf besar/kecil diabaikan. Tanda `%` berarti "boleh ada apa saja sebelum/sesudah".
+- `.select()` di belakang `update()` / `delete()` membuat Supabase mengembalikan baris yang benar-benar terkena.
 
-### Relasi antar tabel: kenapa data dipecah jadi beberapa tabel
+- Kalau `data.length === 0`, berarti tidak ada yang berubah, dan pengguna perlu diberi tahu.
 
-Sampai sekarang, kolom `kategori` di tabel `umkm` diisi manual sebagai teks bebas — bisa saja seseorang mengetik "kuliner", "Kuliner", atau "makanan" untuk hal yang sama. Ini bikin data tidak konsisten.
+### Satu pendengar untuk banyak tombol (event delegation)
 
-Solusinya: pisahkan kategori jadi tabel sendiri, lalu **hubungkan** dengan tabel UMKM.
+Tabel di dashboard digambar ulang setiap data dimuat, jadi tombol Edit dan Hapus-nya juga dibuat ulang. Memasang pendengar klik di tiap tombol itu merepotkan.
 
-Analogi: bayangkan data mahasiswa. Alih-alih menulis ulang nama jurusan lengkap di setiap baris mahasiswa, kampus punya tabel jurusan terpisah, dan tabel mahasiswa cukup menyimpan **nomor referensi** ke jurusan itu — nomor itu disebut **foreign key**.
+- Solusinya, pasang **satu** pendengar di `<tbody>` (induknya), lalu cek tombol mana yang diklik lewat `event.target.closest("button[data-aksi]")`.
+
+- Tombol membawa info lewat atribut `data-aksi="edit"` dan `data-id="7"`, dibaca lewat `tombol.dataset.aksi` dan `tombol.dataset.id`.
+
+### Autentikasi vs Otorisasi
+
+Dua istilah yang sering tertukar:
+
+- **Autentikasi** — memastikan **siapa** penggunanya. Contoh: login dengan email dan password.
+
+- **Otorisasi** — memastikan **apa yang boleh dilakukan** pengguna itu. Contoh: hanya pemilik data yang boleh menghapus datanya.
+
+Analogi: autentikasi itu satpam mengecek KTP di pintu masuk. Otorisasi itu kartu akses yang menentukan ruangan mana saja yang boleh kamu masuki.
+
+Login username di pertemuan 4 tidak punya keduanya: tidak ada pemeriksaan siapa kamu, dan tidak ada pembatasan apa yang boleh kamu lakukan.
+
+### Supabase Auth: daftar, login, session, logout
+
+Supabase Auth mengurus akun pengguna untuk kita. Password disimpan dalam bentuk **hash** (diacak satu arah), bukan teks biasa, jadi kita tidak perlu membangun sistem ini dari nol.
+
+```text
+1. signUp                 -> user mendaftar dengan email + password
+2. signInWithPassword     -> user masuk, Supabase memberi "session"
+3. session                -> disimpan di browser, dikirim di setiap permintaan berikutnya
+4. signOut                -> session dihapus, user dianggap keluar
+```
+
+```javascript
+await supabaseClient.auth.signUp({ email, password });
+await supabaseClient.auth.signInWithPassword({ email, password });
+const { data } = await supabaseClient.auth.getSession();   // data.session = null kalau belum login
+await supabaseClient.auth.signOut();
+```
+
+- **Session** adalah tanda "sudah login". Isinya mengenali siapa user-nya, dan disimpan Supabase di browser supaya tetap login walau halaman di-refresh.
+
+- `getSession()` mengembalikan sesi kalau ada, atau `null` kalau belum login. Itu yang dipakai untuk memeriksa login di setiap halaman.
+
+- **Confirm email:** secara bawaan Supabase meminta pengguna mengklik link di email sebelum bisa login. Di kelas ini fitur itu **dimatikan sementara** (lihat panduan), supaya tidak perlu membuka inbox.
+
+### Row Level Security: aturan tiap baris
+
+Di pertemuan 4 kita sudah kenal RLS dan policy. Hari ini policy-nya kita buat mengenali siapa penggunanya:
+
+```sql
+create policy "umkm pemilik boleh mengubah"
+  on public.umkm for update to authenticated
+  using (user_id = (select auth.uid()))
+  with check (user_id = (select auth.uid()));
+```
+
+| Bagian | Artinya |
+|---|---|
+| `to authenticated` | Berlaku untuk user yang sudah login. Pengunjung biasa memakai role `anon` |
+| `auth.uid()` | Id user yang sedang login, dikirim otomatis oleh Supabase |
+| `using (...)` | Syarat baris yang **boleh disentuh** (baris yang sudah ada) |
+| `with check (...)` | Syarat **hasil akhir** (baris setelah diubah atau yang baru dimasukkan) |
+
+Aturan yang kita pakai di tabel `umkm`:
+
+| Aksi | Siapa yang boleh |
+|---|---|
+| Baca (`select`) | **Semua orang**, termasuk yang belum login. Ini katalog publik |
+| Tambah (`insert`) | User yang login, atas namanya sendiri |
+| Ubah (`update`) dan Hapus (`delete`) | Hanya **pemilik** baris (`user_id` sama dengan user yang login) |
+
+Itulah jawaban untuk "kenapa baca dibuka untuk semua tapi tulis dibatasi": katalog harus bisa dilihat siapa saja, tapi mengubah isinya harus ada pemiliknya.
+
+> Slide visual: dua user (A dan B). Tanpa RLS ketat, saling menimpa data. Dengan RLS ketat, tiap user terkunci ke datanya sendiri.
+
+### Menyembunyikan tombol bukan keamanan
+
+Di dashboard, tombol Edit dan Hapus hanya tampil di baris milik user yang login. Tapi itu hanya **kemudahan tampilan**.
+
+- Orang yang paham tetap bisa mengirim permintaan `delete` langsung ke Supabase.
+
+- Yang benar-benar menolaknya adalah **RLS di server**, bukan tombol yang disembunyikan.
+
+- Aturan praktis: pembatasan yang penting harus ada di database, bukan hanya di JavaScript.
+
+### Jebakan policy: login tapi data tidak muncul
+
+Role `anon` dan `authenticated` itu **dua role berbeda**. Policy baca dari pertemuan 4 hanya untuk `anon`. Begitu user login, dia berganti jadi `authenticated`, dan policy lama tidak berlaku lagi. Akibatnya setelah login, data tiba-tiba kosong.
+
+- Karena itu script migrasi menghapus policy baca lama dan membuat yang baru: `to anon, authenticated`.
+
+- Gejalanya mudah diingat: **sebelum login data ada, setelah login data hilang** = policy baca belum untuk `authenticated`.
+
+### Relasi antar tabel: foreign key
+
+Sampai sekarang kolom `kategori` di tabel `umkm` berisi teks bebas. Orang bisa mengetik "kuliner", "Kuliner", atau "makanan" untuk hal yang sama, sehingga data tidak konsisten.
+
+Solusinya: pisahkan kategori jadi tabel sendiri, lalu **hubungkan** dengan tabel `umkm`.
 
 ```text
 Tabel: kategori                    Tabel: umkm
@@ -92,399 +201,100 @@ Tabel: kategori                    Tabel: umkm
 ```
 
 - **Primary key** di tabel `kategori` adalah `id`.
-- **Foreign key** di tabel `umkm` adalah `kategori_id` — nilainya merujuk ke `id` pada tabel `kategori`.
-- Relasi ini disebut **one-to-many**: satu kategori bisa dimiliki oleh banyak UMKM.
 
-> Slide visual: diagram di atas dengan panah dari `kategori_id` ke `id` tabel kategori.
+- **Foreign key** di tabel `umkm` adalah `kategori_id`: nilainya merujuk ke `id` di tabel `kategori`.
 
-Keuntungan relasi:
-- Data konsisten — kategori hanya ditulis sekali di satu tempat.
-- Kalau nama kategori perlu diubah, cukup ubah satu baris di tabel `kategori`, otomatis berlaku untuk semua UMKM terkait.
+- Hubungannya **one-to-many**: satu kategori dimiliki banyak UMKM.
 
-### Autentikasi vs Otorisasi
+- Analogi: tabel mahasiswa tidak menulis ulang nama jurusan lengkap di tiap baris. Cukup menyimpan **nomor jurusan** yang merujuk ke tabel jurusan.
 
-Dua istilah yang sering tertukar:
+Mengambil data dari dua tabel sekaligus (join) dilakukan di `select()`:
 
-- **Autentikasi** — proses memastikan **siapa** penggunanya (login, cek email dan password).
-- **Otorisasi** — proses memastikan **apa yang boleh dilakukan** pengguna itu setelah dikenali (misalnya, hanya pemilik data yang boleh menghapus datanya sendiri).
-
-Analogi: autentikasi itu seperti satpam mengecek KTP di pintu masuk kantor; otorisasi itu seperti kartu akses yang menentukan ruangan mana saja yang boleh kamu masuki setelah masuk.
-
-### Alur sign up, login, dan session
-
-```text
-1. Sign up   → user daftar dengan email + password
-2. Login     → user masuk, Supabase memberi "session" (tanda sudah login)
-3. Session   → disimpan di browser, dipakai untuk setiap permintaan berikutnya
-4. Logout    → session dihapus, user dianggap keluar
+```javascript
+const { data } = await supabaseClient
+  .from("umkm")
+  .select("*, kategori(nama)");   // semua kolom umkm + nama dari tabel kategori
 ```
 
-Supabase Auth mengurus semua penyimpanan password secara aman (di-*hash*, tidak disimpan sebagai teks biasa) — kita tidak perlu membangun sistem ini dari nol.
-
-### Row Level Security (RLS): kenapa penting
-
-Ingat di pertemuan 4 kita membuat policy "izinkan semua orang membaca dan menambah data" — itu policy yang sangat longgar, cocok untuk latihan tapi berbahaya untuk aplikasi sungguhan.
-
-Tanpa RLS yang tepat: **siapa pun** yang tahu `anon key` (yang memang publik) bisa mengubah atau menghapus data siapa saja, bukan cuma datanya sendiri.
-
-RLS memungkinkan kita menulis aturan seperti: "user hanya boleh meng-update atau menghapus baris yang `user_id`-nya cocok dengan dirinya sendiri."
-
-```text
-Tanpa RLS ketat:  Siapa saja -> bisa ubah/hapus data siapa saja
-Dengan RLS ketat: User A     -> hanya bisa ubah/hapus data milik User A
-```
-
-> Slide visual: dua user (A dan B) dengan panah — versi tanpa RLS saling menyerobot data, versi dengan RLS masing-masing terkunci ke datanya sendiri.
+Praktik langkah demi langkahnya ada di bagian **Bonus** panduan: boleh dilewati kalau waktu kelas habis.
 
 ## Hands-on: Langkah demi Langkah
 
-### Langkah 1 — Menambahkan tombol Edit dan Hapus
+Panduan lengkap (klik apa, file apa, kode lengkap, plus komentar penanda perubahan dari pertemuan 4) ada di **[`implementasi-auth-crud/README.md`](implementasi-auth-crud/README.md)**. Ringkasannya:
 
-Ubah function `renderUmkm` di `app.js` supaya tiap kartu punya tombol:
+**Bagian A — Supabase (di browser)**
 
-```javascript
-function renderUmkm(data) {
-  const container = document.querySelector("#daftar-umkm-container");
-  container.innerHTML = "";
+1. Matikan **Confirm email** di pengaturan Authentication.
 
-  data.forEach(function (item) {
-    container.innerHTML += `
-      <article class="kartu" data-id="${item.id}">
-        <h3>${item.nama}</h3>
-        <p>Kategori: ${item.kategori}</p>
-        <p>Alamat: ${item.alamat}</p>
-        <button class="btn-edit" data-id="${item.id}">Edit</button>
-        <button class="btn-hapus" data-id="${item.id}">Hapus</button>
-      </article>
-    `;
-  });
+2. Jalankan script `supabase-migrasi-p5.sql` di **SQL Editor**: menambah kolom `user_id` dan mengganti policy.
 
-  pasangEventTombolAksi();
-}
-```
+**Bagian B — Kode (lanjut dari folder pertemuan 4, atau mulai dari `mulai-dari-pertemuan-4/`)**
 
-**Cek hasil:** setiap kartu UMKM sekarang punya dua tombol tambahan di bawahnya (belum berfungsi, karena `pasangEventTombolAksi` belum dibuat).
+3. `js/common.js`: sesi login memakai Supabase Auth.
 
-### Langkah 2 — Menghapus data (Delete)
+4. `login.html` + `js/login.js`: form email + password, tombol Masuk dan Daftar. **Titik berhenti 1: daftar dan login jalan.**
 
-Tambahkan function ini di `app.js`, di bawah `renderUmkm`:
+5. `dashboard.html` + `css/dashboard.css` + `js/dashboard.js`: kolom Aksi, tombol Edit dan Hapus, update dan delete dengan `.eq()` dan `.select()`. **Titik berhenti 2: CRUD lengkap dan hak akses jalan.**
 
-```javascript
-function pasangEventTombolAksi() {
-  document.querySelectorAll(".btn-hapus").forEach(function (tombol) {
-    tombol.addEventListener("click", async function () {
-      const id = tombol.dataset.id;
-      const konfirmasi = confirm("Yakin ingin menghapus data ini?");
-      if (!konfirmasi) return;
+6. Tes dengan dua akun: akun kedua tidak bisa mengubah atau menghapus data akun pertama.
 
-      const { error } = await supabaseClient.from("umkm").delete().eq("id", id);
+7. **Bonus:** relasi tabel `kategori`.
 
-      if (error) {
-        console.error("Gagal menghapus:", error);
-        alert("Gagal menghapus data.");
-        return;
-      }
+8. Commit.
 
-      ambilDanTampilkanUmkm();
-    });
-  });
-}
-```
-
-Penjelasan:
-- `.delete().eq("id", id)` — menghapus **hanya** baris dengan `id` sesuai tombol yang diklik.
-- `confirm(...)` — memunculkan dialog konfirmasi bawaan browser sebelum aksi berbahaya (hapus data) dijalankan.
-
-**Cek hasil:** klik "Hapus" pada satu kartu memunculkan dialog konfirmasi, lalu kartu itu hilang setelah dikonfirmasi. Kartu lain tidak terpengaruh.
-
-### Langkah 3 — Mengubah data (Update)
-
-Tambahkan di dalam function `pasangEventTombolAksi`, setelah blok `.btn-hapus`:
-
-```javascript
-  document.querySelectorAll(".btn-edit").forEach(function (tombol) {
-    tombol.addEventListener("click", async function () {
-      const id = tombol.dataset.id;
-      const namaBaru = prompt("Nama baru:");
-      if (namaBaru === null || namaBaru.trim() === "") return;
-
-      const { error } = await supabaseClient
-        .from("umkm")
-        .update({ nama: namaBaru.trim() })
-        .eq("id", id);
-
-      if (error) {
-        console.error("Gagal mengubah:", error);
-        alert("Gagal mengubah data.");
-        return;
-      }
-
-      ambilDanTampilkanUmkm();
-    });
-  });
-```
-
-**Cek hasil:** klik "Edit" memunculkan kotak `prompt` berisi nama baru, setelah diisi, kartu ter-update dengan nama baru — hanya kartu yang diedit, yang lain tidak berubah.
-
-**Kalau error:** kalau semua baris ikut berubah, cek kembali apakah `.eq("id", id)` benar-benar tertulis, dan pastikan `id` yang dikirim sesuai dengan tombol yang diklik.
-
-### Langkah 4 — Menambahkan kotak pencarian
-
-Di `index.html`, tambahkan sebelum `<div class="filter">`:
-
-```html
-<input type="text" id="kotak-cari" placeholder="Cari nama UMKM...">
-```
-
-Di `app.js`, tambahkan:
-
-```javascript
-const kotakCari = document.querySelector("#kotak-cari");
-
-kotakCari.addEventListener("input", async function () {
-  const kataKunci = kotakCari.value.trim();
-
-  const { data, error } = await supabaseClient
-    .from("umkm")
-    .select("*")
-    .ilike("nama", `%${kataKunci}%`)
-    .order("id", { ascending: true });
-
-  if (error) {
-    console.error("Gagal mencari:", error);
-    return;
-  }
-
-  renderUmkm(data);
-});
-```
-
-**Cek hasil:** mengetik di kotak pencarian langsung menyaring kartu yang tampil sesuai kata kunci, tanpa reload halaman.
-
-### Langkah 5 — Membuat tabel `kategori` dan relasinya
-
-1. Di Supabase Table Editor, klik **New table**, beri nama `kategori`.
-2. Tambahkan kolom `nama` (tipe `text`).
-3. Buat policy read+insert untuk tabel ini seperti langkah pertemuan 4 (**Enable read access for all users**).
-4. Isi 3 baris: "Kuliner", "Fashion", "Kerajinan".
-5. Kembali ke tabel `umkm`, klik **New column**, beri nama `kategori_id`, tipe `int8`.
-6. Pada opsi kolom, cari bagian **Foreign Key Relation**, hubungkan `kategori_id` ke `kategori.id`.
-7. Update baris-baris `umkm` yang sudah ada: isi `kategori_id` sesuai kategori masing-masing (lihat `id` di tabel kategori).
-
-**Cek hasil:** tabel `umkm` punya kolom baru `kategori_id` yang terhubung (linked) ke tabel `kategori`.
-
-**Kalau error:** kalau opsi Foreign Key Relation tidak muncul, pastikan tipe data `kategori_id` (`int8`) sama dengan tipe `id` di tabel `kategori`.
-
-### Langkah 6 — Query gabungan (join) dua tabel
-
-Ganti bagian `.select("*")` pada `ambilDanTampilkanUmkm` menjadi:
-
-```javascript
-const { data, error } = await supabaseClient
-  .from("umkm")
-  .select("*, kategori(nama)")
-  .order("id", { ascending: true });
-```
-
-Lalu di `renderUmkm`, ganti `${item.kategori}` menjadi `${item.kategori.nama}`.
-
-Penjelasan: `select("*, kategori(nama)")` meminta Supabase mengambil semua kolom `umkm` **plus** kolom `nama` dari tabel `kategori` yang terhubung lewat `kategori_id` — inilah manfaat relasi, data digabung otomatis tanpa query terpisah.
-
-**Cek hasil:** nama kategori tetap tampil di kartu, tapi sekarang datanya diambil dari tabel `kategori` lewat relasi, bukan teks bebas di tabel `umkm`.
-
-### Langkah 7 — Mengaktifkan Supabase Auth (Email)
-
-1. Di sidebar Supabase, klik **Authentication > Providers**.
-2. Pastikan **Email** dalam kondisi aktif (biasanya sudah default aktif).
-3. Di **Authentication > URL Configuration**, pastikan Site URL mengarah ke `http://localhost` untuk pengembangan lokal (nanti diubah lagi saat deploy di pertemuan 6).
-
-**Cek hasil:** menu Authentication menampilkan daftar user (masih kosong) dan pengaturan provider Email aktif.
-
-### Langkah 8 — Membuat form Register dan Login
-
-Tambahkan section baru di `index.html`, sebelum section Kontak:
-
-```html
-<section id="auth">
-  <h2>Login / Daftar</h2>
-  <input type="email" id="auth-email" placeholder="Email">
-  <input type="password" id="auth-password" placeholder="Password">
-  <button id="btn-daftar">Daftar</button>
-  <button id="btn-login">Login</button>
-  <button id="btn-logout" style="display:none;">Logout</button>
-  <p id="status-login"></p>
-</section>
-```
-
-Tambahkan di `app.js`:
-
-```javascript
-const inputEmail = document.querySelector("#auth-email");
-const inputPassword = document.querySelector("#auth-password");
-const statusLogin = document.querySelector("#status-login");
-const btnDaftar = document.querySelector("#btn-daftar");
-const btnLogin = document.querySelector("#btn-login");
-const btnLogout = document.querySelector("#btn-logout");
-
-btnDaftar.addEventListener("click", async function () {
-  const { error } = await supabaseClient.auth.signUp({
-    email: inputEmail.value,
-    password: inputPassword.value
-  });
-
-  if (error) {
-    alert("Gagal daftar: " + error.message);
-    return;
-  }
-
-  alert("Pendaftaran berhasil! Silakan login.");
-});
-
-btnLogin.addEventListener("click", async function () {
-  const { error } = await supabaseClient.auth.signInWithPassword({
-    email: inputEmail.value,
-    password: inputPassword.value
-  });
-
-  if (error) {
-    alert("Gagal login: " + error.message);
-    return;
-  }
-
-  cekStatusLogin();
-});
-
-btnLogout.addEventListener("click", async function () {
-  await supabaseClient.auth.signOut();
-  cekStatusLogin();
-});
-
-async function cekStatusLogin() {
-  const { data } = await supabaseClient.auth.getSession();
-
-  if (data.session) {
-    statusLogin.textContent = "Login sebagai: " + data.session.user.email;
-    btnLogout.style.display = "inline-block";
-    btnLogin.style.display = "none";
-    btnDaftar.style.display = "none";
-  } else {
-    statusLogin.textContent = "Belum login.";
-    btnLogout.style.display = "none";
-    btnLogin.style.display = "inline-block";
-    btnDaftar.style.display = "inline-block";
-  }
-}
-
-cekStatusLogin();
-```
-
-Penjelasan:
-- `auth.signUp({ email, password })` — mendaftarkan user baru.
-- `auth.signInWithPassword({ email, password })` — login, hasilnya otomatis membuat session.
-- `auth.getSession()` — mengecek apakah ada session aktif (user sedang login atau tidak).
-- `auth.signOut()` — menghapus session (logout).
-
-**Cek hasil:** daftar dengan email+password baru, lalu login — teks "Login sebagai: ..." muncul dan tombol berubah jadi Logout.
-
-**Kalau error:** kalau Supabase minta verifikasi email, cek pengaturan **Authentication > Providers > Email > Confirm email** — untuk latihan kelas, opsi ini boleh dimatikan sementara agar tidak perlu cek inbox.
-
-### Langkah 9 — Menyembunyikan tombol Edit/Hapus untuk yang belum login
-
-Ubah `renderUmkm` supaya tombol Edit/Hapus hanya muncul kalau user sudah login:
-
-```javascript
-async function renderUmkm(data) {
-  const { data: sesiData } = await supabaseClient.auth.getSession();
-  const sudahLogin = sesiData.session !== null;
-
-  const container = document.querySelector("#daftar-umkm-container");
-  container.innerHTML = "";
-
-  data.forEach(function (item) {
-    const tombolAksi = sudahLogin
-      ? `<button class="btn-edit" data-id="${item.id}">Edit</button>
-         <button class="btn-hapus" data-id="${item.id}">Hapus</button>`
-      : "";
-
-    container.innerHTML += `
-      <article class="kartu" data-id="${item.id}">
-        <h3>${item.nama}</h3>
-        <p>Kategori: ${item.kategori.nama}</p>
-        <p>Alamat: ${item.alamat}</p>
-        ${tombolAksi}
-      </article>
-    `;
-  });
-
-  pasangEventTombolAksi();
-}
-```
-
-Catatan: `renderUmkm` sekarang jadi `async function` karena memakai `await` di dalamnya — pastikan semua tempat yang memanggilnya (misalnya di `ambilDanTampilkanUmkm`) tetap berjalan normal karena JavaScript otomatis menunggu `async function` selesai saat dipanggil dengan `await` atau di dalam function `async` lain.
-
-**Cek hasil:** saat belum login, kartu UMKM tampil tanpa tombol Edit/Hapus. Setelah login, tombolnya muncul kembali.
-
-### Langkah 10 — Mengaktifkan RLS ketat (dasar)
-
-1. Di Supabase, buka tabel `umkm`, tab **Policies**.
-2. Hapus policy lama **"Enable insert access for all users"**.
-3. Buat policy baru dengan pilihan custom: **INSERT** hanya diizinkan untuk role `authenticated` (bukan `anon`). Supabase menyediakan template **"Enable insert for authenticated users only"** — pilih itu.
-4. Lakukan hal sama untuk **UPDATE** dan **DELETE**: buat policy yang hanya mengizinkan role `authenticated`.
-5. Biarkan policy **SELECT** tetap terbuka untuk semua orang (`anon` dan `authenticated`), supaya siapa pun tetap bisa melihat katalog tanpa login.
-
-**Cek hasil:** logout dari aplikasi, coba tambah/edit/hapus data — aksi akan gagal dengan error dari Supabase terkait policy. Setelah login kembali, aksi berhasil normal.
-
-**Kalau error:** kalau setelah login pun tetap gagal, pastikan `renderUmkm` dan tombol aksi benar-benar terpasang **setelah** proses login selesai (`cekStatusLogin()` dipanggil ulang setelah login berhasil).
-
-### Langkah 11 — Commit progres
-
-```bash
-git add .
-git commit -m "Tambah update, delete, relasi kategori, auth, dan RLS dasar"
-git push
-```
-
-**Cek hasil:** commit baru tercatat di GitHub.
+Yang **tidak berubah** dari pertemuan 4: `index.html`, `css/style.css`, `js/app.js`. Halaman publik tetap hanya membaca data.
 
 ### Hasil akhir sesi ini
 
-Struktur folder tetap sama, tapi `app.js` kini jauh lebih lengkap:
-
 ```text
-website-umkm/
-├── index.html
-├── style.css
-├── app.js
-└── .gitignore
+pert5-code/
+├── README.md                          <- teori (file ini)
+├── implementasi-auth-crud/            <- hasil jadi + panduan step-by-step
+│   ├── README.md
+│   ├── supabase-migrasi-p5.sql
+│   ├── index.html  login.html  dashboard.html
+│   ├── css/  style.css  dashboard.css
+│   ├── js/   common.js  app.js  login.js  dashboard.js
+│   └── bonus-relasi-kategori/         <- bonus: tabel kategori + foreign key
+└── mulai-dari-pertemuan-4/            <- titik awal (hasil pertemuan 4)
 ```
 
-Aplikasi sekarang punya CRUD penuh, data kategori terpisah dan berelasi lewat foreign key, serta sistem login/register dengan RLS yang membatasi siapa boleh mengubah data.
+Aplikasi sekarang punya CRUD lengkap, login asli lewat Supabase Auth, dan aturan hak akses di database: pengunjung hanya bisa membaca, user yang login bisa menambah, dan hanya pemilik data yang bisa mengubah atau menghapus.
 
 ## Catatan AI
 
-Contoh prompt yang baik: "Jelaskan kenapa policy RLS untuk SELECT tetap dibiarkan terbuka untuk publik sementara INSERT/UPDATE/DELETE dibatasi. Jangan tuliskan policy lengkap punyaku." Selalu uji ulang aplikasi dalam kondisi logout untuk memastikan RLS benar-benar berfungsi, jangan hanya percaya karena kodenya "terlihat benar".
+Contoh prompt yang baik: "Jelaskan kenapa `delete()` yang ditolak RLS tidak mengembalikan error, dan bagaimana cara mendeteksinya di supabase-js. Jangan tuliskan kode lengkap dashboard punyaku." Selalu uji dengan **dua akun** dan dalam keadaan **logout**. Jangan hanya percaya karena kodenya "terlihat benar".
 
 ## Latihan mandiri
 
-Tambahkan kolom `user_id` (tipe `uuid`) pada tabel `umkm`, isi otomatis dengan `id` user yang sedang login saat insert (`supabaseClient.auth.getSession()` untuk mendapatkan `user.id`), lalu buat policy RLS agar user hanya bisa **update dan delete data miliknya sendiri** (bandingkan `user_id` dengan `auth.uid()`).
+Tambahkan tombol atau tampilan **"UMKM saya"** di dashboard: tabel hanya menampilkan UMKM milik user yang sedang login. Petunjuk: tambahkan `.eq("user_id", user.id)` pada query `select`, dan pikirkan kapan filter ini sebaiknya aktif (selalu, atau hanya lewat tombol).
 
 ## Rangkuman
 
-CRUD lengkap butuh kehati-hatian, terutama filter `.eq()` pada Update dan Delete. Relasi antar tabel lewat foreign key menjaga data tetap konsisten. Autentikasi memastikan siapa penggunanya, sementara Row Level Security memastikan apa yang boleh mereka lakukan terhadap data. Minggu depan, aplikasi ini akan kita deploy ke internet lewat Vercel, sekaligus arahan untuk proyek akhir kelompok.
+CRUD lengkap menuntut kehati-hatian, terutama `.eq()` pada Update dan Delete, dan kebiasaan memeriksa hasilnya karena RLS menolak secara diam-diam. Autentikasi memastikan siapa penggunanya (Supabase Auth: `signUp`, `signInWithPassword`, `getSession`, `signOut`), sedangkan otorisasi memastikan apa yang boleh dia lakukan (Row Level Security dengan `auth.uid()`). Membaca data dibuka untuk semua orang, sementara menambah, mengubah, dan menghapus dibatasi. Relasi antar tabel lewat foreign key menjaga data tetap konsisten. Minggu depan aplikasi ini kita deploy ke internet lewat Vercel, sekaligus arahan untuk proyek akhir kelompok.
 
 ## Istilah penting
 
 | Istilah | Artinya |
 |---|---|
-| CRUD | Create, Read, Update, Delete — empat operasi dasar terhadap data |
-| Foreign key | Kolom yang merujuk ke primary key tabel lain, untuk membuat relasi |
-| One-to-many | Jenis relasi di mana satu baris di tabel A bisa dimiliki banyak baris di tabel B |
-| Autentikasi | Proses memastikan identitas pengguna (login) |
-| Otorisasi | Proses menentukan apa yang boleh dilakukan pengguna |
-| Session | Tanda bahwa pengguna sedang dalam status login |
-| Row Level Security (RLS) | Aturan yang membatasi akses baca/tulis pada baris data tertentu |
-| Policy | Satu aturan spesifik dalam RLS, misalnya "izinkan SELECT untuk semua orang" |
+| CRUD | Create, Read, Update, Delete: empat operasi dasar terhadap data |
+| `.eq()` | Filter "sama dengan", wajib dipakai pada Update dan Delete |
+| Autentikasi | Memastikan siapa penggunanya (login) |
+| Otorisasi | Memastikan apa yang boleh dilakukan pengguna |
+| Supabase Auth | Layanan Supabase untuk daftar, login, dan sesi pengguna |
+| Session | Tanda bahwa user sudah login, disimpan di browser |
+| `getSession()` | Mengecek apakah ada session aktif |
+| `auth.uid()` | Id user yang sedang login, dipakai di policy RLS |
+| Role `anon` / `authenticated` | Pengunjung belum login / user yang sudah login |
+| `using` / `with check` | Syarat baris yang boleh disentuh / syarat hasil akhir sebuah perubahan |
+| Event delegation | Memasang satu pendengar di elemen induk untuk melayani banyak elemen di dalamnya |
+| Foreign key | Kolom yang merujuk ke primary key di tabel lain |
+| One-to-many | Satu baris di tabel A dimiliki banyak baris di tabel B |
+| Join | Mengambil data dari dua tabel yang berelasi dalam satu query |
+| Publishable key | Kunci akses publik yang aman dipakai di frontend (dulu disebut anon key) |
 
 ## Isi folder
 
-- Belum ada kode — akan ditambahkan menjelang pertemuan 5, melanjutkan dari `pert4-code`.
+- `implementasi-auth-crud/` — kode lengkap (key dummy), panduan `README.md`, `supabase-migrasi-p5.sql`, dan folder `bonus-relasi-kategori/`.
+
+- `mulai-dari-pertemuan-4/` — titik awal: salinan hasil pertemuan 4 (key dummy) beserta `supabase-setup.sql`.

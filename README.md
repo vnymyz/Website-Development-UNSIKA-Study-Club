@@ -37,7 +37,7 @@ Setelah menyelesaikan program ini, peserta diharapkan mampu:
 | 2 | CSS, box model, Flexbox, Grid, responsive, Git & GitHub | Halaman responsif, sudah ter-commit dan push ke repository |
 | 3 | JavaScript dasar dan DOM | Halaman interaktif: filter, form, dan render data dari array |
 | 4 | Konsep database dan Supabase (Login, Read, Create) | Direktori UMKM membaca data dari database, login username sederhana, dan UMKM baru bisa ditambah lewat dashboard |
-| 5 | Update, Delete, relasi tabel, dan autentikasi | Aplikasi CRUD penuh dengan sistem login |
+| 5 | Edit, Hapus, login asli (Supabase Auth), dan hak akses (RLS) | Aplikasi CRUD penuh dengan login asli, hanya pemilik data yang bisa mengubah atau menghapus |
 | 6 | Deploy ke Vercel dan GitHub dasar | Aplikasi live di URL publik, repository rapi |
 
 ## Rincian Alur Belajar
@@ -64,10 +64,10 @@ Studi kasus dipakai konsisten dari pertemuan 1 sampai 6: **katalog UMKM Karawang
 - **Belajar apa:** kenapa data butuh database (bukan cuma array), konsep tabel/baris/kolom/primary key, apa itu Postgres dan Supabase, perbedaan Publishable key (dulu disebut `anon key`) vs Secret key (dulu `service_role key`), membuat tabel lewat SQL Editor, memasang Supabase JS Client, query `select()` dan `insert()`, Row Level Security dasar (policy baca/tambah), `async`/`await`, login username sederhana dengan `localStorage`.
 - **Outcome:** data UMKM tidak lagi disimpan di array — Direktori menampilkan data dari database Postgres sungguhan (Read, filter dan pencarian tetap jalan). Ada halaman login (username saja), dashboard yang dijaga login, dan form di dashboard untuk menambah UMKM baru (Create). Data tetap ada meski halaman di-refresh. Edit dan Hapus dikerjakan di pertemuan 5. Kode ada di `pert4-code/implementasi-supabase/` (hasil jadi) dan `pert4-code/mulai-dari-kosong/` (folder kosong untuk dikerjakan dari awal).
 
-### Pertemuan 5 — Update, Delete, Relasi Tabel & Autentikasi
+### Pertemuan 5 — Edit, Hapus, Login Asli & Hak Akses
 
-- **Belajar apa:** melengkapi CRUD dengan `update()` dan `delete()` (dan kenapa `.eq()` wajib dipakai), pencarian/filter data, relasi antar tabel lewat foreign key (tabel `kategori` terpisah dari `umkm`), autentikasi vs otorisasi, Supabase Auth (sign up, login, logout, session), Row Level Security ketat berbasis status login.
-- **Outcome:** aplikasi CRUD penuh (tambah/lihat/ubah/hapus) dengan sistem login — tombol Edit/Hapus hanya muncul untuk yang sudah login, dan data kategori sudah berelasi lewat tabel terpisah.
+- **Belajar apa:** melengkapi CRUD dengan `update()` dan `delete()` (kenapa `.eq()` wajib, dan RLS yang menolak secara diam-diam), autentikasi vs otorisasi, Supabase Auth (daftar, login, logout, session), Row Level Security berbasis pemilik data (`auth.uid()`), dan relasi antar tabel lewat foreign key (praktiknya bonus).
+- **Outcome:** aplikasi CRUD penuh dengan login asli (email + password) — tombol Edit/Hapus hanya muncul di data milik user yang login, dan aturan di database memastikan hanya pemilik yang bisa mengubah atau menghapus datanya. Kode ada di `pert5-code/implementasi-auth-crud/` (hasil jadi) dan `pert5-code/mulai-dari-pertemuan-4/` (titik awal).
 
 ### Pertemuan 6 — Deploy, README & Arahan Proyek Akhir
 

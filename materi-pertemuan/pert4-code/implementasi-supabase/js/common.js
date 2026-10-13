@@ -5,8 +5,8 @@
 
 // ---------- [BARU P4] 1. Koneksi Supabase ----------
 // GANTI dua nilai ini dengan milik project Supabase kamu sendiri.
-const SUPABASE_URL = "https://iaivokyozwnyfwnceepm.supabase.co";
-const SUPABASE_KEY = "sb_publishable_xQstWDBGfMTC9UrjuHqpUQ_idBLgoHn";
+const SUPABASE_URL = "https://xxxxxxxxxxxx.supabase.co";
+const SUPABASE_KEY = "sb_publishable_ISI_KEY_KAMU_DI_SINI";
 
 // Library Supabase (dari CDN di HTML) menyediakan window.supabase
 const { createClient } = window.supabase;

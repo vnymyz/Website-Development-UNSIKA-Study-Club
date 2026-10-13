@@ -1014,7 +1014,9 @@ form.form-terang select {
   padding: 12px 14px;
   font-family: inherit;
   font-size: 0.95rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
 form.form-terang input::placeholder {
@@ -1243,7 +1245,9 @@ button.tombol-sekunder {
   text-align: left;
   text-decoration: none;
   cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
 }
 
 .menu-item i {
@@ -1486,6 +1490,15 @@ td.galat {
   color: #b3412e;
 }
 
+/* Kolom nomor urut: sempit, rata tengah */
+th.nomor,
+td.nomor {
+  width: 48px;
+  text-align: center;
+  color: var(--matcha-mid);
+  font-weight: 700;
+}
+
 td strong {
   display: block;
   color: var(--ink);
@@ -1553,7 +1566,9 @@ td small {
   opacity: 0;
   transform: translateY(12px);
   pointer-events: none;
-  transition: opacity 0.25s, transform 0.25s;
+  transition:
+    opacity 0.25s,
+    transform 0.25s;
   z-index: 50;
 }
 
@@ -1911,6 +1926,7 @@ Dua file baru lagi.
                 <table>
                   <thead>
                     <tr>
+                      <th class="nomor">No</th>
                       <th>Foto</th>
                       <th>Usaha</th>
                       <th>Kategori</th>
@@ -2056,9 +2072,10 @@ function mulaiDashboard() {
   });
 
   // ---------- Logout ----------
+  // [UBAH P4] Setelah logout kembali ke halaman utama (index.html)
   document.querySelector("#tombol-logout").addEventListener("click", () => {
     hapusUsername();
-    location.replace("login.html");
+    location.replace("index.html");
   });
 
   // ---------- Toast: pesan singkat yang hilang sendiri ----------
@@ -2092,11 +2109,11 @@ function mulaiDashboard() {
 
   async function muatTabel() {
     if (!konfigurasiSiap()) {
-      tubuhTabel.innerHTML = `<tr><td colspan="6" class="galat">Isi SUPABASE_URL dan SUPABASE_KEY dulu di js/common.js.</td></tr>`;
+      tubuhTabel.innerHTML = `<tr><td colspan="7" class="galat">Isi SUPABASE_URL dan SUPABASE_KEY dulu di js/common.js.</td></tr>`;
       return;
     }
 
-    tubuhTabel.innerHTML = `<tr><td colspan="6">Memuat data...</td></tr>`;
+    tubuhTabel.innerHTML = `<tr><td colspan="7">Memuat data...</td></tr>`;
 
     const { data, error } = await supabaseClient
       .from("umkm")
@@ -2105,16 +2122,18 @@ function mulaiDashboard() {
 
     if (error) {
       console.error("Gagal mengambil data:", error);
-      tubuhTabel.innerHTML = `<tr><td colspan="6" class="galat">Gagal mengambil data. Buka Console (F12).</td></tr>`;
+      tubuhTabel.innerHTML = `<tr><td colspan="7" class="galat">Gagal mengambil data. Buka Console (F12).</td></tr>`;
       return;
     }
 
     renderStatistik(data);
     jumlahUmkm.textContent = data.length + " usaha";
+    // urutan dimulai dari 0, jadi ditambah 1 supaya nomor tampil 1, 2, 3, ...
     tubuhTabel.innerHTML = data
       .map(
-        (umkm) => `
+        (umkm, urutan) => `
         <tr>
+          <td class="nomor">${urutan + 1}</td>
           <td><img class="foto-kecil" src="${escapeHtml(umkm.foto)}" alt="" loading="lazy" /></td>
           <td><strong>${escapeHtml(umkm.nama)}</strong><small>${escapeHtml(umkm.alamat)}</small></td>
           <td><span class="pil">${escapeHtml(umkm.kategori)}</span></td>
@@ -2206,6 +2225,8 @@ Penjelasan singkat:
 
 - Kartu ringkasan di atas tabel (Total, Kuliner, Fashion, Kerajinan) dihitung dari data yang diambil, jadi angkanya ikut berubah saat ada UMKM baru.
 
+- Kolom **No** di tabel adalah nomor urut tampilan (1, 2, 3, ...), dibuat dari urutan baris saat ditampilkan. Ini beda dari `id` di database, yang tidak berubah walau ada data yang dihapus.
+
 - Setelah berhasil menyimpan, kamu dikembalikan ke daftar dan muncul pesan singkat ("toast") di pojok kanan bawah.
 
 - **Penjaga login** ada di bagian paling atas `dashboard.js`: kalau belum ada username, langsung `location.replace("login.html")`. Halaman dashboard juga disembunyikan lewat CSS (`belum-dicek`) sampai pengecekan lolos, jadi isinya tidak sempat kelihatan.
@@ -2228,7 +2249,7 @@ Coba satu per satu:
 
 1. Buka `dashboard.html` langsung (ketik di address bar) **tanpa login** -> kamu langsung dipindah ke halaman login.
 
-2. Di halaman login, isi username bebas, misalnya `budi`, klik **Masuk** -> masuk dashboard. Terlihat sidebar di kiri (menu, nama **budi**, tombol **Logout**), 4 kartu ringkasan (Total 6, Kuliner 2, Fashion 2, Kerajinan 2), dan tabel berisi 6 UMKM.
+2. Di halaman login, isi username bebas, misalnya `budi`, klik **Masuk** -> masuk dashboard. Terlihat sidebar di kiri (menu, nama **budi**, tombol **Logout**), 4 kartu ringkasan (Total 6, Kuliner 2, Fashion 2, Kerajinan 2), dan tabel berisi 6 UMKM dengan kolom **No** (nomor urut 1, 2, 3, ...).
 
 3. Klik menu **Tambah UMKM** di sidebar -> tampil form. Kosongkan form lalu klik **Simpan** -> muncul pesan "wajib diisi".
 
@@ -2240,7 +2261,7 @@ Coba satu per satu:
 
 7. Cek di Supabase **Table Editor** -> baris baru ada di tabel `umkm`.
 
-8. Kembali ke dashboard, klik **Logout** di bawah sidebar -> pindah ke halaman login. Buka `index.html`, navbar kembali menampilkan **Login**.
+8. Kembali ke dashboard, klik **Logout** di bawah sidebar -> kamu langsung kembali ke halaman utama (`index.html`), dan navbar kembali menampilkan **Login**.
 
 9. Perkecil lebar jendela browser (atau buka di HP) -> sidebar bersembunyi, muncul tombol menu di pojok kiri atas untuk membukanya.
 
@@ -2292,6 +2313,8 @@ Pengunjung -> index.html (Direktori dari Supabase, filter + cari)
                                     dashboard.html (daftar + tambah UMKM)
                                       |            |
                                     Home         Logout
+                                      |            |
+                                      +----> kembali ke index.html
 ```
 
 ## Ringkasan Perubahan dari Pertemuan 3

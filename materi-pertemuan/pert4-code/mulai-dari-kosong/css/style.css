@@ -1,0 +1,1076 @@
+/*
+  CSS variable (custom property). Ditulis sekali di :root, dipakai
+  berkali-kali lewat var(--nama). Kalau mau ganti warna tema, cukup
+  ubah di sini — tidak perlu cari-ganti di semua tempat.
+*/
+:root {
+  --matcha-abyss: #1e2a18;
+  --matcha-dark: #33422b;
+  --matcha-mid: #7c9473;
+  --sage-pale: #e9efe1;
+  --cream: #f6f3e7;
+  --gold: #c9a66b;
+  --ink: #1f2937;
+  --content-width: 1080px;
+}
+
+/* Reset dasar: hilangkan margin/padding bawaan browser yang beda-beda tiap browser */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* border & padding dihitung masuk ke lebar elemen, bukan nambah lebar */
+}
+
+/*
+  scroll-behavior: smooth membuat perpindahan ke #id (misalnya klik link
+  nav ke "#tentang") meluncur halus, bukan langsung loncat.
+  scroll-padding-top mengimbangi tinggi header yang sticky, supaya judul
+  section tidak ketutupan header saat baru sampai.
+*/
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 84px;
+}
+
+body {
+  font-family: "Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif;
+  color: var(--ink);
+  background-color: var(--cream);
+  line-height: 1.6;
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif;
+  font-weight: 800;
+}
+
+a {
+  color: inherit;
+}
+
+/*
+  Peserta yang mengaktifkan "reduce motion" di sistem operasinya (biasanya
+  karena mabuk gerak/motion sickness) akan melihat halaman ini nyaris tanpa
+  animasi. Trik: paksa semua durasi animasi/transisi jadi nyaris 0 detik.
+*/
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ================= HEADER ================= */
+/*
+  position: sticky membuat header ini nempel di atas begitu halaman
+  discroll sampai posisinya, lalu tetap di situ (beda dengan "fixed"
+  yang nempel dari awal halaman dibuka).
+*/
+header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: var(--matcha-abyss);
+  color: white;
+  transition: transform 0.3s ease;
+}
+
+/* Ditambahkan lewat JS saat pengguna scroll ke bawah — header digeser ke atas sampai hilang */
+header.sembunyi {
+  transform: translateY(-100%);
+}
+
+/*
+  Grid 3 kolom "1fr auto 1fr": kolom kiri (wordmark) dan kolom kanan
+  (spacer kosong) selalu diberi lebar yang SAMA karena sama-sama 1fr,
+  apa pun isinya. Efeknya kolom tengah (nav) selalu benar-benar di
+  tengah header — beda dengan flexbox space-between yang mendorong nav
+  ke ujung kanan mengikuti lebar wordmark.
+*/
+.header-inner {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 20px 24px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 12px;
+}
+
+.wordmark {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-weight: 800;
+  font-size: 1.2rem;
+  letter-spacing: -0.01em;
+}
+
+header nav {
+  display: flex;
+  gap: 24px;
+}
+
+header nav a {
+  color: var(--sage-pale);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  padding-bottom: 2px;
+  border-bottom: 2px solid transparent;
+  transition:
+    border-color 0.2s,
+    color 0.2s;
+}
+
+header nav a:hover,
+header nav a:focus-visible {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+/* ================= HERO ================= */
+/*
+  position: relative di sini jadi acuan buat 3 lapisan .hero-bg dan
+  .hero-overlay yang semuanya position: absolute — pola yang sama
+  seperti badge kategori (relative parent + absolute child), cuma
+  dipakai buat menumpuk latar belakang, bukan menumpuk elemen kecil.
+*/
+.hero {
+  position: relative;
+  overflow: hidden;
+  color: white;
+  text-align: center;
+  padding: 120px 24px;
+}
+
+/*
+  Tiga foto ditumpuk persis di posisi yang sama (inset: 0 memenuhi
+  seluruh .hero), lalu masing-masing diberi animation-delay berbeda
+  supaya bergantian terlihat. Ini murni CSS — tidak ada JavaScript
+  yang mengganti gambar.
+*/
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  animation: heroBgCycle 18s infinite;
+}
+
+.hero-bg-2 {
+  animation-delay: 6s;
+}
+
+.hero-bg-3 {
+  animation-delay: 12s;
+}
+
+/*
+  18 detik dibagi 3 foto = 6 detik jatah tiap foto. Tiap foto: tersembunyi
+  (0%) → memudar masuk (5%) → tampil penuh (28%) → memudar keluar (33%) →
+  tersembunyi lagi sampai putaran berikutnya. animation-delay di atas
+  menggeser kapan tiap foto memulai siklus ini, jadi hasilnya bergantian.
+*/
+@keyframes heroBgCycle {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  28% {
+    opacity: 1;
+  }
+  33% {
+    opacity: 0;
+  }
+}
+
+/* Lapisan gelap transparan di atas foto, supaya teks putih tetap terbaca di foto apa pun */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(20, 28, 16, 0.68);
+}
+
+.hero-inner {
+  position: relative; /* supaya tampil di atas .hero-bg dan .hero-overlay */
+  max-width: 640px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/*
+  clamp(min, ideal, max) bikin ukuran font otomatis menyesuaikan lebar
+  layar di antara batas minimum dan maksimum — tanpa perlu media query
+  terpisah cuma buat ukuran teks.
+*/
+.hero-inner h1 {
+  font-size: clamp(2.2rem, 5vw, 3.3rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+  opacity: 0;
+  animation: heroRise 0.6s ease forwards;
+}
+
+.hero-inner p {
+  max-width: 46ch;
+  color: var(--sage-pale);
+  font-size: 1.05rem;
+  margin-bottom: 28px;
+  opacity: 0;
+  animation: heroRise 0.6s ease 0.15s forwards;
+}
+
+.hero-cta {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+  opacity: 0;
+  animation: heroRise 0.6s ease 0.3s forwards;
+}
+
+/*
+  Ini satu-satunya urutan animasi "otomatis saat halaman dibuka" di
+  seluruh halaman (judul, lalu paragraf, lalu tombol —
+  perhatikan animation-delay yang berbeda tiap elemen). Sengaja cuma
+  di hero, supaya animasi tidak berserakan di semua bagian.
+*/
+@keyframes heroRise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.btn-primary,
+.btn-ghost {
+  display: inline-block;
+  padding: 12px 24px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition:
+    transform 0.15s,
+    background-color 0.2s,
+    color 0.2s;
+}
+
+.btn-primary {
+  background-color: var(--gold);
+  color: var(--matcha-abyss);
+}
+
+.btn-primary:hover,
+.btn-primary:focus-visible {
+  transform: translateY(-2px);
+}
+
+.btn-ghost {
+  border: 1px solid var(--matcha-mid);
+  color: var(--sage-pale);
+}
+
+.btn-ghost:hover,
+.btn-ghost:focus-visible {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+/* ================= Reveal saat discroll ================= */
+/*
+  Section dimulai transparan + sedikit turun. Begitu IntersectionObserver
+  (lihat script di index.html) mendeteksi section masuk layar, class
+  "tampil" ditambahkan dan transition di bawah ini yang menganimasikannya.
+  Jaraknya sengaja kecil (12px) dan cepat (0.5s) supaya terasa halus,
+  bukan pertunjukan animasi yang berlebihan.
+*/
+.reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  filter: blur(
+    6px
+  ); /* mulai buram, jadi terlihat "muncul dari kabut" saat opacity naik */
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease,
+    filter 0.6s ease;
+}
+
+.reveal.tampil {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+/* ================= Direktori ================= */
+.direktori {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 56px 24px;
+}
+
+.direktori h2 {
+  font-size: 1.6rem;
+  color: var(--matcha-dark);
+  margin-bottom: 20px;
+}
+
+/*
+  Toolbar pencarian + filter — TAMPILAN SAJA. Input dan select ini belum
+  disambungkan ke logika apa pun (belum ada JavaScript), jadi mengetik
+  atau ganti dropdown-nya belum benar-benar menyaring kartu di bawah.
+*/
+.direktori-toolbar {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+
+.direktori-cari {
+  flex: 1;
+  min-width: 200px;
+  padding: 11px 18px;
+  border: 1px solid #ddd6c4;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  background-color: white;
+}
+
+/*
+  appearance: none menghilangkan panah bawaan browser (posisinya gak bisa
+  diatur pakai padding). Panah custom dipasang lewat SVG di background,
+  posisinya diatur manual pakai background-position — jadi bisa "dimasukin"
+  sesuai jarak yang kita mau, ngikutin padding kanan.
+*/
+.direktori-kategori {
+  padding: 11px 36px 11px 18px;
+  border: 1px solid #ddd6c4;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  background-color: white;
+  color: var(--ink);
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2333422b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+}
+
+.direktori-cari:focus,
+.direktori-kategori:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+
+/* Grid kartu: auto-fit + minmax bikin jumlah kolom menyesuaikan sendiri lebar layar, tanpa media query manual */
+.grid-umkm {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 22px;
+}
+
+/* Pesan ini dirender app.js kalau hasil filter/pencarian tidak ada yang cocok */
+.grid-umkm .kosong {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--matcha-mid);
+  font-size: 0.95rem;
+}
+
+.kartu-umkm {
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  overflow: hidden;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.kartu-umkm:hover,
+.kartu-umkm:focus-within {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 28px rgba(51, 66, 43, 0.14);
+}
+
+/* position: relative di sini jadi acuan buat .badge yang absolute di dalamnya */
+.kartu-foto {
+  position: relative;
+  aspect-ratio: 4 / 3;
+}
+
+.kartu-foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.kartu-isi {
+  padding: 16px 18px 20px;
+}
+
+.kartu-isi h3 {
+  font-size: 1.1rem;
+  color: var(--matcha-dark);
+  margin-bottom: 4px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis; /* nama kepanjangan dipotong jadi "...", bukan bikin tinggi kartu beda-beda */
+}
+
+.kartu-isi .alamat {
+  color: #6b6b5f;
+  font-size: 0.88rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/*
+  Alamat yang kepanjangan dipotong jadi satu baris + "..." di ujungnya
+  (text-overflow: ellipsis), bukan bikin kartu jadi tinggi sebelah.
+  min-width: 0 wajib di sini supaya flex item ini mau menyusut duluan
+  sebelum ikon di sebelahnya ikut menyusut.
+*/
+.kartu-isi .alamat span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.kartu-isi .alamat i,
+.kartu-isi .jam i {
+  color: var(--matcha-mid);
+  flex-shrink: 0;
+}
+
+.kartu-isi .jam {
+  color: var(--matcha-mid);
+  font-size: 0.8rem;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.kartu-isi .wa {
+  color: var(--matcha-dark);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.kartu-isi .wa i {
+  color: var(--matcha-mid);
+}
+
+/*
+  Badge kategori: position: absolute melepas elemen ini dari alur normal
+  dan menempelkannya presisi ke pojok kanan-atas .kartu-foto (parent
+  terdekat yang sudah diberi position: relative di atas).
+*/
+.badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: inline-block;
+  padding: 4px 12px;
+  background-color: var(--gold);
+  color: var(--matcha-dark);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/*
+  Paginasi — TAMPILAN SAJA juga. Angka "1" ditandai .aktif lewat HTML
+  langsung (bukan JavaScript), sekadar contoh bagaimana halaman aktif
+  biasanya dibedakan secara visual.
+*/
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 36px;
+}
+
+.pagination a {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ddd6c4;
+  border-radius: 8px;
+  color: var(--matcha-dark);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s,
+    color 0.2s;
+}
+
+.pagination a:hover,
+.pagination a:focus-visible {
+  border-color: var(--gold);
+}
+
+.pagination a.aktif {
+  background-color: var(--matcha-dark);
+  border-color: var(--matcha-dark);
+  color: white;
+}
+
+/* ================= Tentang ================= */
+/* CSS Grid 2 kolom asimetris: kolom teks lebih lebar (7 bagian) dari kolom gambar (5 bagian) */
+.tentang {
+  display: grid;
+  grid-template-columns: 7fr 5fr;
+  max-width: var(--content-width);
+  margin: 56px auto;
+  border-radius: 16px;
+  overflow: hidden; /* biar sudut foto & panel ikut membulat mengikuti .tentang, bukan cuma sudut luarnya */
+}
+
+.tentang-teks {
+  background-color: var(--sage-pale);
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.tentang-teks h2 {
+  font-size: 1.6rem;
+  color: var(--matcha-dark);
+  margin-bottom: 8px;
+}
+
+.tentang-teks > p {
+  color: #444;
+}
+
+.tentang-gambar {
+  overflow: hidden; /* biar foto yang dibesarkan lewat object-fit tidak keluar dari kotaknya */
+}
+
+.tentang-gambar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ================= Testimoni ================= */
+.testimoni {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 56px 24px;
+  border-top: 1px solid #ddd6c4;
+}
+
+.testimoni h2 {
+  font-size: 1.6rem;
+  color: var(--matcha-dark);
+  margin-bottom: 24px;
+}
+
+.testimoni-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 22px;
+}
+
+.testimoni-kartu {
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  box-shadow: 0 8px 24px rgba(51, 66, 43, 0.12);
+}
+
+.testimoni-teks {
+  color: #444;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.testimoni-orang {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Avatar cuma inisial di lingkaran warna gold — bukan foto orang beneran */
+.testimoni-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--sage-pale);
+  color: var(--matcha-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.testimoni-nama {
+  color: var(--matcha-dark);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.testimoni-lokasi {
+  color: var(--matcha-mid);
+  font-size: 0.8rem;
+}
+
+/* ================= Video ================= */
+.video-section {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 56px 24px;
+  border-top: 1px solid #ddd6c4;
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 40px;
+  align-items: center;
+}
+
+.sub-label {
+  color: var(--matcha-mid);
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-bottom: 8px;
+}
+
+.video-copy h2 {
+  color: var(--matcha-dark);
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+}
+
+.video-copy p {
+  color: #555;
+  max-width: 42ch;
+}
+
+/*
+  aspect-ratio: 16/9 mengunci rasio lebar:tinggi kotak ini apa pun lebar
+  layarnya, jadi video tidak pernah gepeng atau terlalu tinggi. Ini
+  menggantikan trik lama "padding-bottom: 56.25%" yang lebih ribet.
+*/
+.video-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: var(--matcha-abyss);
+  box-shadow: 0 8px 24px rgba(51, 66, 43, 0.12);
+}
+
+.video-frame iframe {
+  position: absolute;
+  inset: 0; /* setara top:0; right:0; bottom:0; left:0; */
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* ================= Lokasi ================= */
+.lokasi {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 56px 24px;
+  border-top: 1px solid #ddd6c4;
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+/* Peta juga pakai aspect-ratio, sama seperti video di atas */
+.lokasi-peta {
+  aspect-ratio: 16 / 9;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #ddd6c4;
+  box-shadow: 0 8px 24px rgba(51, 66, 43, 0.12);
+}
+
+.lokasi-peta iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.lokasi-daftar h2 {
+  color: var(--matcha-dark);
+  font-size: 1.5rem;
+  margin-bottom: 16px;
+}
+
+/* WhatsApp & Instagram jadi tombol bulat yang bisa diklik, bukan cuma teks */
+.lokasi-sosial {
+  display: flex;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.lokasi-sosial a {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: var(--sage-pale);
+  color: var(--matcha-dark);
+  font-size: 1.05rem;
+  text-decoration: none;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+
+.lokasi-sosial a:hover,
+.lokasi-sosial a:focus-visible {
+  background-color: var(--gold);
+  color: var(--matcha-abyss);
+}
+
+.lokasi-daftar ul {
+  list-style: none;
+}
+
+.lokasi-daftar li {
+  padding: 6px 0;
+  font-size: 0.92rem;
+  color: #555;
+}
+
+.lokasi-daftar li i {
+  color: var(--matcha-mid);
+  width: 16px;
+  margin-right: 8px;
+  text-align: center;
+}
+
+/* ================= Kontak ================= */
+.kontak {
+  background-color: var(--matcha-abyss);
+  color: white;
+  padding: 64px 24px;
+}
+
+.kontak-inner {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 48px;
+}
+
+.kontak-copy h2 {
+  font-size: 1.8rem;
+  margin-bottom: 12px;
+}
+
+.kontak-copy p {
+  color: var(--sage-pale);
+  max-width: 36ch;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+form label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--sage-pale);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Form bergaris bawah, bukan kotak — lebih ringan di atas panel gelap */
+form input,
+form textarea {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--matcha-mid);
+  color: white;
+  padding: 8px 2px;
+  font-family: inherit;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+form input::placeholder,
+form textarea::placeholder {
+  color: #8ba088;
+}
+
+form input:focus,
+form textarea:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+
+form textarea {
+  resize: vertical;
+  min-height: 70px;
+}
+
+button {
+  align-self: flex-start;
+  background-color: var(--gold);
+  color: var(--matcha-abyss);
+  border: none;
+  padding: 12px 24px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+button:hover,
+button:focus-visible {
+  transform: translateY(-2px);
+}
+
+/* Garis fokus jelas untuk pengguna keyboard, di semua elemen interaktif */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* ================= Footer ================= */
+footer {
+  background-color: var(--matcha-abyss);
+  color: var(--matcha-mid);
+  padding: 20px 24px;
+  font-size: 0.85rem;
+  border-top: 1px solid #34432c;
+}
+
+.footer-inner {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.footer-sosial {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.footer-sosial a {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: rgba(246, 243, 231, 0.08);
+  color: var(--sage-pale);
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition:
+    color 0.2s,
+    background-color 0.2s;
+}
+
+.footer-sosial a:hover,
+.footer-sosial a:focus-visible {
+  color: var(--gold);
+  background-color: rgba(201, 166, 107, 0.15);
+}
+
+/* Player audio dibikin kecil dan rendah — cuma "iseng" nemplok di footer, bukan elemen utama */
+.footer-audio {
+  height: 28px;
+  max-width: 180px;
+}
+
+/* ================= Tombol kembali ke atas ================= */
+/*
+  position: fixed menempel ke jendela browser (bukan ke halaman), jadi
+  tombol ini selalu ada di pojok kanan-bawah layar walau halaman
+  discroll ke mana pun. Bedanya dengan .badge yang "absolute": absolute
+  nempel ke parent, fixed nempel ke jendela.
+*/
+/*
+  Ikon panah di dalam tombol ini di-set width/height eksplisit + flex-shrink:0
+  di bawah — tanpa itu, ikon SVG bisa kehitung lebar 0 oleh browser saat
+  beradadi dalam container flex bersama reset box-sizing: border-box global.
+*/
+.ke-atas {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--gold);
+  color: var(--matcha-abyss);
+  border: none;
+  box-shadow: 0 6px 16px rgba(30, 42, 24, 0.25);
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none; /* saat tersembunyi, tombol tidak bisa diklik walau posisinya masih ada */
+  transform: translateY(8px) scale(0.9);
+  transition:
+    opacity 0.25s,
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.ke-atas svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.ke-atas.tampil {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+.ke-atas:hover,
+.ke-atas:focus-visible {
+  background-color: var(--matcha-dark);
+  color: var(--sage-pale);
+  box-shadow: 0 10px 22px rgba(30, 42, 24, 0.32);
+  transform: translateY(-3px) scale(1);
+}
+
+/* ================= Responsif ================= */
+@media (max-width: 860px) {
+  .tentang {
+    grid-template-columns: 1fr;
+  }
+
+  .tentang-gambar {
+    min-height: 240px;
+  }
+
+  .video-section {
+    grid-template-columns: 1fr;
+  }
+
+  .lokasi {
+    grid-template-columns: 1fr;
+  }
+
+  .kontak-inner {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Header jadi 1 kolom: wordmark dan nav ditumpuk, tetap sama-sama di tengah */
+  .header-inner {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+
+  header nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px 16px;
+  }
+
+  .hero {
+    padding: 88px 20px;
+  }
+
+  .footer-inner {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .ke-atas {
+    right: 16px;
+    bottom: 16px;
+  }
+}
+
+/* ================= [BARU P4] Navbar login ================= */
+/* Diisi js/common.js: link "Login", atau "Halo, username" kalau sudah login */
+#auth-navbar {
+  justify-self: end;
+}
+
+#auth-navbar a {
+  color: var(--gold);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border: 1px solid var(--gold);
+  padding: 6px 16px;
+  border-radius: 999px;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+
+#auth-navbar a:hover,
+#auth-navbar a:focus-visible {
+  background-color: var(--gold);
+  color: var(--matcha-abyss);
+}
+
+/* [BARU P4] Pesan error di grid UMKM (teks "Memuat..." memakai .kosong yang sudah ada) */
+.grid-umkm .galat {
+  color: #b3412e;
+}
