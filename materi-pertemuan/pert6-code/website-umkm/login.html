@@ -1,0 +1,97 @@
+<!doctype html>
+<!-- Halaman login: email + password lewat Supabase Auth -->
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login — Katalog UMKM Karawang</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome: ikon di halaman login -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <!-- style.css dulu (gaya dasar), baru dashboard.css (gaya khusus halaman ini) -->
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/dashboard.css" />
+  </head>
+  <body>
+    <main class="login-split">
+      <!-- Kiri: sisi visual (disembunyikan sebagian di layar HP) -->
+      <section class="login-visual">
+        <a class="login-merek" href="index.html">
+          <i class="fa-solid fa-store" aria-hidden="true"></i> UMKM Karawang
+        </a>
+
+        <div>
+          <h2>Kelola usaha warga Karawang di satu tempat.</h2>
+          <p>Masuk untuk menambah UMKM baru ke direktori.</p>
+          <ul class="login-poin">
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Data tersimpan di database Supabase</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Langsung tampil di halaman Direktori</li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i> Login aman pakai email dan password</li>
+          </ul>
+        </div>
+
+        <p class="login-hak">&copy; 2026 Katalog UMKM Karawang</p>
+      </section>
+
+      <!-- Kanan: form login -->
+      <section class="login-panel">
+        <a class="login-kembali" href="index.html">
+          <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Kembali ke Home
+        </a>
+
+        <div class="login-isi">
+          <div class="login-kartu">
+            <span class="login-logo"><i class="fa-solid fa-store" aria-hidden="true"></i></span>
+            <h1>Selamat datang</h1>
+            <p class="login-sub">Masuk dengan email dan password. Belum punya akun? Isi lalu klik Daftar.</p>
+
+            <form id="form-login" class="form-terang">
+              <label for="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                autocomplete="email"
+                placeholder="contoh: budi@email.com"
+              />
+
+              <label for="password">Password</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                autocomplete="current-password"
+                placeholder="minimal 6 karakter"
+              />
+
+              <button type="submit" class="tombol-penuh">
+                Masuk <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+              </button>
+              <!-- Tombol daftar akun baru (type="button" supaya tidak ikut submit) -->
+              <button type="button" id="tombol-daftar" class="tombol-penuh tombol-sekunder">
+                Daftar akun baru
+              </button>
+            </form>
+
+            <p id="pesan-login" class="status status-galat" role="alert"></p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Urutan wajib: library Supabase -> common.js -> login.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2"></script>
+    <script src="js/common.js"></script>
+    <script src="js/login.js"></script>
+  </body>
+</html>

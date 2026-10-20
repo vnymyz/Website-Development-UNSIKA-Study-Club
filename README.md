@@ -69,9 +69,9 @@ Studi kasus dipakai konsisten dari pertemuan 1 sampai 6: **katalog UMKM Karawang
 - **Belajar apa:** melengkapi CRUD dengan `update()` dan `delete()` (kenapa `.eq()` wajib, dan RLS yang menolak secara diam-diam), autentikasi vs otorisasi, Supabase Auth (daftar, login, logout, session), Row Level Security berbasis pemilik data (`auth.uid()`), dan relasi antar tabel lewat foreign key (praktiknya bonus).
 - **Outcome:** aplikasi CRUD penuh dengan login asli (email + password) — tombol Edit/Hapus hanya muncul di data milik user yang login, dan aturan di database memastikan hanya pemilik yang bisa mengubah atau menghapus datanya. Kode ada di `pert5-code/implementasi-auth-crud/` (hasil jadi) dan `pert5-code/mulai-dari-pertemuan-4/` (titik awal).
 
-### Pertemuan 6 — Deploy, README & Arahan Proyek Akhir
+### Pertemuan 6 — Deploy, Keamanan Database (RLS) & Arahan Proyek Akhir
 
-- **Belajar apa:** kenapa perlu deploy, static hosting, cara kerja Vercel, environment variable, cara menulis README yang layak portofolio, dasar debugging (Console, Network tab, pesan error Supabase).
+- **Belajar apa:** kenapa perlu deploy, static hosting, upload ke GitHub dengan Git, cara kerja Vercel, key mana yang boleh ada di kode yang di-deploy, cara kerja RLS dan kenapa XSS dan SQL injection tidak berhasil, audit dan uji keamanan database lewat SQL, cara menulis README yang layak portofolio, dasar debugging (Console, Network tab, pesan error Supabase). Tidak ada fitur baru.
 - **Outcome:** aplikasi live di URL publik Vercel (bisa dibuka siapa saja, bukan cuma di laptop sendiri), auto-deploy tiap `git push`, repository GitHub punya README lengkap — siap dipajang sebagai portofolio. Kurikulum inti selesai, lanjut ke proyek akhir kelompok.
 
 ## Cara Menggunakan Materi

@@ -1,0 +1,748 @@
+/* ======================================================
+   dashboard.css — gaya halaman login dan dashboard
+   (file BARU di pertemuan 4). Dimuat SETELAH style.css.
+   Warna dan font mengikuti tema website (variabel di style.css).
+   ====================================================== */
+
+/* Dashboard disembunyikan sampai dashboard.js selesai cek login */
+body.belum-dicek {
+  display: none;
+}
+
+/* ---------- Pesan status ---------- */
+.status {
+  min-height: 1.4em;
+  font-size: 0.9rem;
+}
+
+.status.status-galat {
+  color: #b3412e;
+}
+
+.status.status-ok {
+  color: #3f6b34;
+}
+
+/* ---------- Form bergaya terang (dipakai login dan form tambah UMKM) ----------
+   "form.form-terang ..." sengaja ditulis spesifik supaya menang dari gaya form
+   gelap bawaan di style.css (yang dibuat untuk section Kontak). */
+form.form-terang label {
+  color: var(--matcha-dark);
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+form.form-terang input,
+form.form-terang select {
+  background: white;
+  border: 1px solid #ddd6c4;
+  border-radius: 12px;
+  color: var(--ink);
+  padding: 12px 14px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+form.form-terang input::placeholder {
+  color: #9aa595;
+}
+
+form.form-terang input:focus,
+form.form-terang select:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(201, 166, 107, 0.25);
+}
+
+/* Tombol sekunder (Batal): garis tepi, bukan emas penuh */
+.tombol-sekunder,
+button.tombol-sekunder {
+  background: transparent;
+  color: var(--matcha-dark);
+  border: 1px solid #cfc8b3;
+}
+
+/* ======================================================
+   HALAMAN LOGIN
+   ====================================================== */
+.login-split {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+}
+
+/* ----- Kiri: visual ----- */
+.login-visual {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 32px;
+  padding: 48px;
+  color: white;
+  background:
+    linear-gradient(160deg, rgba(30, 42, 24, 0.86), rgba(30, 42, 24, 0.95)),
+    url("https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=1400&q=65&auto=format&fit=crop")
+      center / cover;
+}
+
+.login-merek {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  align-self: flex-start;
+  font-weight: 800;
+  font-size: 1.2rem;
+  color: white;
+  text-decoration: none;
+}
+
+.login-merek i {
+  color: var(--gold);
+}
+
+.login-visual h2 {
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  line-height: 1.15;
+  max-width: 16ch;
+  margin-bottom: 14px;
+}
+
+.login-visual p {
+  color: var(--sage-pale);
+  max-width: 38ch;
+}
+
+.login-poin {
+  list-style: none;
+  display: grid;
+  gap: 12px;
+  margin-top: 28px;
+  color: var(--sage-pale);
+  font-size: 0.95rem;
+}
+
+.login-poin i {
+  color: var(--gold);
+  margin-right: 8px;
+}
+
+.login-visual .login-hak {
+  font-size: 0.82rem;
+  color: var(--matcha-mid);
+}
+
+/* ----- Kanan: form ----- */
+.login-panel {
+  display: flex;
+  flex-direction: column;
+  padding: 28px 48px;
+  background-color: var(--cream);
+}
+
+.login-kembali {
+  align-self: flex-start;
+  color: var(--matcha-dark);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.login-kembali i {
+  margin-right: 6px;
+}
+
+.login-kembali:hover,
+.login-kembali:focus-visible {
+  color: var(--gold);
+}
+
+.login-isi {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  padding: 24px 0;
+}
+
+.login-kartu {
+  width: min(400px, 100%);
+}
+
+.login-logo {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background-color: var(--matcha-abyss);
+  color: var(--gold);
+  display: grid;
+  place-items: center;
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+}
+
+.login-kartu h1 {
+  font-size: 1.9rem;
+  color: var(--matcha-dark);
+  margin-bottom: 8px;
+}
+
+.login-sub {
+  color: #5b6b52;
+  margin-bottom: 26px;
+}
+
+.login-kartu form {
+  gap: 10px;
+}
+
+.login-kartu .status {
+  margin-top: 14px;
+}
+
+/* Tombol selebar form */
+.tombol-penuh {
+  align-self: stretch;
+  width: 100%;
+  margin-top: 8px;
+  padding: 14px 24px;
+}
+
+.tombol-penuh i {
+  margin-left: 6px;
+}
+
+/* ======================================================
+   DASHBOARD: layout sidebar + konten
+   ====================================================== */
+.layout {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+/* ----- Sidebar ----- */
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 16px;
+  background-color: var(--matcha-abyss);
+  color: var(--sage-pale);
+}
+
+.sidebar-merek {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 10px 24px;
+  font-weight: 800;
+  font-size: 1.15rem;
+  color: white;
+  text-decoration: none;
+}
+
+.sidebar-merek i {
+  color: var(--gold);
+}
+
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ".menu-item" dipakai untuk <button> maupun <a>, jadi gaya tombol bawaan perlu ditimpa */
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  background: transparent;
+  color: var(--sage-pale);
+  border: none;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+
+.menu-item i {
+  width: 18px;
+  text-align: center;
+  color: var(--matcha-mid);
+  transition: color 0.2s;
+}
+
+.menu-item:hover,
+.menu-item:focus-visible {
+  background-color: rgba(255, 255, 255, 0.07);
+  transform: none;
+}
+
+.menu-item.aktif {
+  background-color: var(--matcha-dark);
+  color: white;
+}
+
+.menu-item.aktif i {
+  color: var(--gold);
+}
+
+/* ----- Info user + logout (nempel di bawah sidebar) ----- */
+.sidebar-user {
+  margin-top: auto;
+  padding-top: 18px;
+  border-top: 1px solid #34432c;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sidebar-profil {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.sidebar-profil > div {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.sidebar-profil small {
+  color: var(--matcha-mid);
+  font-size: 0.75rem;
+}
+
+.sidebar-profil strong {
+  color: white;
+  font-size: 0.95rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.avatar {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--gold);
+  color: var(--matcha-abyss);
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+}
+
+.tombol-logout {
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 16px;
+  background: transparent;
+  color: var(--sage-pale);
+  border: 1px solid var(--matcha-mid);
+  font-size: 0.9rem;
+}
+
+.tombol-logout:hover,
+.tombol-logout:focus-visible {
+  background-color: rgba(255, 255, 255, 0.07);
+}
+
+/* ----- Konten ----- */
+.konten {
+  min-width: 0;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 22px 36px;
+  background-color: var(--cream);
+  border-bottom: 1px solid #e8e3d2;
+}
+
+.topbar h1 {
+  font-size: 1.5rem;
+  color: var(--matcha-dark);
+}
+
+/* Tombol hamburger: hanya muncul di layar HP */
+.tombol-menu {
+  display: none;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  background-color: var(--matcha-abyss);
+  color: var(--gold);
+  border-radius: 12px;
+  font-size: 1.05rem;
+}
+
+.dashboard {
+  max-width: 1100px;
+  padding: 28px 36px 56px;
+}
+
+/* ----- Kartu statistik ----- */
+.statistik {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+}
+
+.stat-ikon {
+  flex-shrink: 0;
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background-color: var(--sage-pale);
+  color: var(--matcha-dark);
+  display: grid;
+  place-items: center;
+  font-size: 1.1rem;
+}
+
+.stat strong {
+  display: block;
+  font-size: 1.7rem;
+  line-height: 1.1;
+  color: var(--matcha-dark);
+}
+
+.stat div span {
+  font-size: 0.85rem;
+  color: var(--matcha-mid);
+}
+
+/* ----- Kartu umum + tabel ----- */
+.kartu {
+  background-color: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.kartu-kepala {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.kartu h2 {
+  font-size: 1.15rem;
+  color: var(--matcha-dark);
+}
+
+.kartu-sub {
+  color: #5b6b52;
+  margin: 6px 0 22px;
+}
+
+/* Label kecil berbentuk pil (jumlah, kategori) */
+.pil {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 999px;
+  background-color: var(--sage-pale);
+  color: var(--matcha-dark);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+/* overflow-x: auto -> tabel bisa digeser ke samping di layar sempit */
+.tabel-bungkus {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+th {
+  text-align: left;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--matcha-mid);
+  padding: 10px 12px;
+  border-bottom: 1px solid #e5e7eb;
+  white-space: nowrap;
+}
+
+td {
+  padding: 12px;
+  border-bottom: 1px solid #f0efe6;
+  vertical-align: middle;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+td.galat {
+  color: #b3412e;
+}
+
+/* Kolom nomor urut: sempit, rata tengah */
+th.nomor,
+td.nomor {
+  width: 48px;
+  text-align: center;
+  color: var(--matcha-mid);
+  font-weight: 700;
+}
+
+td strong {
+  display: block;
+  color: var(--ink);
+}
+
+td small {
+  display: block;
+  color: var(--matcha-mid);
+  font-size: 0.8rem;
+}
+
+.foto-kecil {
+  display: block;
+  width: 46px;
+  height: 46px;
+  border-radius: 10px;
+  object-fit: cover;
+  background-color: var(--sage-pale);
+}
+
+/* ----- Form tambah UMKM ----- */
+.kartu-form {
+  max-width: 760px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 20px;
+}
+
+.kolom {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.kolom-lebar {
+  grid-column: 1 / -1;
+}
+
+.form-aksi {
+  display: flex;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.kartu-form .status {
+  margin-top: 16px;
+}
+
+/* ----- Toast: pesan singkat di pojok kanan bawah ----- */
+.toast {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  max-width: calc(100vw - 48px);
+  padding: 14px 20px;
+  background-color: var(--matcha-abyss);
+  color: white;
+  border-left: 4px solid var(--gold);
+  border-radius: 12px;
+  font-size: 0.92rem;
+  box-shadow: 0 12px 28px rgba(30, 42, 24, 0.25);
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  transition:
+    opacity 0.25s,
+    transform 0.25s;
+  z-index: 50;
+}
+
+.toast.tampil {
+  opacity: 1;
+  transform: none;
+}
+
+/* Lapisan gelap di belakang sidebar (dipakai di layar HP) */
+.sidebar-lapisan {
+  display: none;
+}
+
+/* ======================================================
+   LAYAR SEMPIT (tablet ke bawah)
+   ====================================================== */
+@media (max-width: 860px) {
+  /* Login: satu kolom, sisi visual jadi banner pendek di atas */
+  .login-split {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+  }
+
+  .login-visual {
+    padding: 24px;
+    gap: 16px;
+  }
+
+  .login-visual h2 {
+    font-size: 1.5rem;
+    max-width: none;
+  }
+
+  .login-poin,
+  .login-visual .login-hak {
+    display: none;
+  }
+
+  .login-panel {
+    padding: 20px 24px 28px;
+  }
+
+  /* Dashboard: sidebar jadi menu geser dari kiri */
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 270px;
+    z-index: 40;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+  }
+
+  .sidebar.terbuka {
+    transform: none;
+  }
+
+  .sidebar-lapisan.tampil {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.45);
+    z-index: 30;
+  }
+
+  .tombol-menu {
+    display: grid;
+  }
+
+  .topbar {
+    padding: 16px 20px;
+  }
+
+  .dashboard {
+    padding: 20px 20px 48px;
+  }
+
+  .form-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .kartu {
+    padding: 18px;
+  }
+
+  /* Kartu statistik jadi 2 kolom supaya tidak memanjang ke bawah */
+  .statistik {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .stat {
+    padding: 14px;
+    gap: 10px;
+  }
+
+  .stat-ikon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .stat strong {
+    font-size: 1.4rem;
+  }
+}
+
+/* ======================================================
+   Tombol Edit dan Hapus di kolom Aksi
+   ====================================================== */
+td.aksi {
+  white-space: nowrap;
+}
+
+/* Tombol kecil: menimpa tombol emas bawaan di style.css */
+.tombol-kecil {
+  padding: 6px 14px;
+  background-color: var(--sage-pale);
+  color: var(--matcha-dark);
+  border-radius: 8px;
+  font-size: 0.8rem;
+  line-height: 1.2;
+}
+
+.tombol-kecil:hover,
+.tombol-kecil:focus-visible {
+  background-color: #dbe5cf;
+}
+
+/* Tombol Hapus: merah supaya terasa berbahaya */
+.tombol-kecil.tombol-bahaya {
+  background-color: #f8e3de;
+  color: #b3412e;
+}
+
+.tombol-kecil.tombol-bahaya:hover,
+.tombol-kecil.tombol-bahaya:focus-visible {
+  background-color: #f1cdc5;
+}
+
+/* Baris yang bukan milik user diberi strip, tanpa tombol */
+.aksi-kosong {
+  color: var(--matcha-mid);
+}
